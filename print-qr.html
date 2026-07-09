@@ -14,7 +14,8 @@
     @media print {
       .no-print { display: none !important; }
       body { margin: 0; padding: 0; }
-      .print-grid { padding: 6mm !important; }
+      .print-grid { gap: 10px !important; padding: 8px !important; }
+      .card-wrapper { break-inside: avoid; }
       * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
@@ -23,55 +24,31 @@
     }
 
     .print-grid {
-      display: flex; flex-wrap: wrap; gap: 20px;
+      display: flex; flex-wrap: wrap; gap: 16px;
       padding: 20px; justify-content: center;
     }
 
-    /* ============ CARD PAIR (front + fold + back) ============ */
-    .card-pair {
-      display: flex; align-items: stretch;
-      break-inside: avoid;
-      page-break-inside: avoid;
+    /* ============ WRAPPER ============ */
+    .card-wrapper {
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .card-label {
+      font-size: 7px; text-align: center; color: #bbb;
+      font-family: 'Nunito Sans', sans-serif; margin-top: 3px;
     }
 
-    /* Fold line in the middle */
-    .fold-line {
-      width: 0;
-      border-left: 1.5px dashed #ccc;
-      position: relative;
-    }
-    .fold-label {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) rotate(-90deg);
-      font-size: 6px; color: #bbb;
-      white-space: nowrap;
-      font-family: 'Nunito Sans', sans-serif;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    /* Corner cut marks */
-    .card-pair::before,
-    .card-pair::after {
-      content: ''; position: absolute;
-    }
-
-    /* ============ SHARED CARD SIZE ============ */
+    /* ============ SHARED SIZE ============ */
     .card-front, .card-back {
       width: 85.6mm; height: 53.98mm;
-      overflow: hidden; position: relative;
+      border-radius: 14px; overflow: hidden;
+      position: relative;
     }
 
     /* ============ FRONT SIDE ============ */
     .card-front {
-      border: 1.5px solid #e0e0e0;
-      border-right: none;
-      border-radius: 12px 0 0 12px;
-      display: flex;
-      background: #fff;
+      border: 2px solid #4CC9F0;
+      display: flex; background: #fff;
     }
-
     .card-front::before {
       content: '';
       position: absolute; top: 0; right: 0;
@@ -136,14 +113,10 @@
 
     /* ============ BACK SIDE ============ */
     .card-back {
-      border: 1.5px solid #e0e0e0;
-      border-left: none;
-      border-radius: 0 12px 12px 0;
       background: linear-gradient(135deg, #FFD60A 0%, #FF9F1C 35%, #F72585 100%);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      padding: 10px 14px; text-align: center;
-      color: #fff;
+      padding: 10px 14px; text-align: center; color: #fff;
     }
     .card-back::before {
       content: '🪙'; position: absolute; top: 6px; left: 8px;
@@ -153,7 +126,6 @@
       content: '🏆'; position: absolute; top: 6px; right: 8px;
       font-size: 11px; opacity: 0.5;
     }
-
     .card-back .back-mascot { font-size: 30px; margin-bottom: 2px; }
     .card-back .back-tagline {
       font-size: 15px; font-weight: 800; color: #fff;
@@ -167,14 +139,6 @@
       position: absolute; bottom: 5px; right: 8px;
       font-size: 9px; opacity: 0.45;
     }
-
-    /* ============ GUIDE TEXT ============ */
-    .card-guide {
-      width: 100%; text-align: center;
-      font-size: 7px; color: #ccc;
-      font-family: 'Nunito Sans', sans-serif;
-      margin-top: 2px; letter-spacing: 0.5px;
-    }
   </style>
 </head>
 <body>
@@ -184,7 +148,7 @@
       <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
     </div>
     <p class="caption text-secondary" style="margin-top:8px;font-family:'Nunito Sans',sans-serif;">
-      ✂️ Gunting tepi luar → Lipat di garis tengah → Lem/Laminating!
+      ✂️ Gunting → Tempel depan & belakang → Laminating!
     </p>
     <hr style="margin:16px 0; border:none; border-top:1px solid #eee;">
   </div>
@@ -211,10 +175,10 @@
         const url = `${BASE_URL}/s/${id}`;
         const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(url)}&color=2B2D42`;
 
-        const container = document.createElement('div');
-        container.innerHTML = `
-          <div class="card-pair">
-            <!-- FRONT -->
+        const wrapper = document.createElement('div');
+        wrapper.className = 'card-wrapper';
+        wrapper.innerHTML = `
+          <div>
             <div class="card-front">
               <div class="qr-zone">
                 <img src="${qrImgUrl}" alt="QR ${id}">
@@ -231,23 +195,20 @@
                 <div class="field-line"></div>
               </div>
             </div>
+            <div class="card-label">▲ DEPAN</div>
+          </div>
 
-            <!-- FOLD LINE -->
-            <div class="fold-line">
-              <div class="fold-label">✂ lipat sini</div>
-            </div>
-
-            <!-- BACK -->
+          <div>
             <div class="card-back">
               <div class="back-mascot">🐱💰</div>
               <div class="back-tagline">Menabung Itu Seru! 🎉</div>
               <div class="back-deco-left">⭐✨</div>
               <div class="back-deco-right">🌟🪙</div>
             </div>
+            <div class="card-label">▲ BELAKANG</div>
           </div>
-          <div class="card-guide">✂ gunting tepi luar → lipat tengah → laminating</div>
         `;
-        grid.appendChild(container);
+        grid.appendChild(wrapper);
       });
     })();
   </script>
