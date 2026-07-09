@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CELDIG — Leaderboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="lb-page">
+  <!-- Sparkles background -->
+  <div id="sparkles" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
+
+  <div style="position:relative; z-index:1;">
+    <!-- Header -->
+    <div class="lb-header">
+      <h1 class="lb-title">🏆 PAPAN PERINGKAT CELDIG</h1>
+      <p class="lb-subtitle" id="lbSubtitle">Bintang Terbanyak Minggu Ini! 🎉</p>
+    </div>
+
+    <!-- Period Tabs -->
+    <div class="period-tabs">
+      <button class="period-tab active" data-period="weekly">Minggu Ini</button>
+      <button class="period-tab" data-period="monthly">Bulan Ini</button>
+      <button class="period-tab" data-period="all">Keseluruhan</button>
+    </div>
+
+    <!-- Podium Top 3 -->
+    <div class="podium" id="podium">
+      <div class="loading-state"><div class="spinner"></div><p style="color:rgba(255,255,255,0.6)">Memuat ranking...</p></div>
+    </div>
+
+    <!-- Rank 4-10 -->
+    <div class="rank-grid" id="rankGrid"></div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/leaderboard.js"></script>
+</body>
+</html>

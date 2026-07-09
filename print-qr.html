@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CELDIG — Cetak QR Code</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+</head>
+<body style="background:#fff;">
+  <div class="no-print container" style="padding:20px 20px 0;">
+    <div class="flex-between">
+      <h1 class="h2">🖨️ Cetak QR Code</h1>
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <p class="caption text-secondary" style="margin-top:8px;">Gunting di garis putus-putus, lalu tempelkan ke celengan dan kartu saku siswa.</p>
+    <hr style="margin:16px 0; border:none; border-top:1px solid #eee;">
+  </div>
+
+  <div class="print-grid" id="qrGrid">
+    <div class="loading-state"><div class="spinner"></div><p>Generating QR codes...</p></div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script>
+    (function() {
+      const BASE_URL = window.location.origin;
+      const grid = document.getElementById('qrGrid');
+
+      // Get QR IDs from session storage (set by admin page)
+      const qrIds = JSON.parse(sessionStorage.getItem('celdig_print_qrs') || '[]');
+
+      if (!qrIds.length) {
+        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#888;">Tidak ada QR Code untuk dicetak. Generate dari halaman Admin terlebih dahulu.</p>';
+        return;
+      }
+
+      grid.innerHTML = '';
+
+      qrIds.forEach(async (id) => {
+        const card = document.createElement('div');
+        card.className = 'qr-card-print';
+
+        const canvas = document.createElement('canvas');
+        const url = `${BASE_URL}/s/${id}`;
+
+        try {
+          await QRCode.toCanvas(canvas, url, {
+            width: 160,
+            margin: 2,
+            color: { dark: '#2B2D42', light: '#FFFFFF' }
+          });
+        } catch (e) {
+          console.error('QR gen failed:', e);
+        }
+
+        card.innerHTML = `
+          <div style="display:flex;justify-content:center;"></div>
+          <p class="qr-id">${id}</p>
+          <p class="qr-label">Nama: _______________</p>
+          <p class="qr-label" style="margin-top:2px;">CELDIG • Celengan Digital</p>
+        `;
+        card.querySelector('div').appendChild(canvas);
+        grid.appendChild(card);
+      });
+    })();
+  </script>
+</body>
+</html>

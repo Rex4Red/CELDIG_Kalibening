@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CELDIG — Scan</title>
+  <meta name="description" content="Celengan Digital - Sistem Tabungan Anak Berbasis QR Code">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- TopBar -->
+  <header class="topbar">
+    <div class="topbar-logo">🐱</div>
+    <span class="topbar-title">CELDIG</span>
+    <div style="width:40px"></div>
+  </header>
+
+  <main class="container flex-1 flex-col gap-md" style="padding-top:24px; padding-bottom:24px;">
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading-state" style="min-height:60vh">
+      <div class="spinner"></div>
+      <p>Memuat data...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="hidden" style="text-align:center; padding:60px 20px;">
+      <div style="font-size:64px; margin-bottom:16px;">😿</div>
+      <h2 class="h2">Oops!</h2>
+      <p class="body text-secondary" style="margin-top:8px;" id="errorMessage">QR Code tidak valid atau terjadi kesalahan.</p>
+      <button class="btn btn-secondary mt-md" onclick="location.reload()">Coba Lagi</button>
+    </div>
+
+    <!-- State 1: Belum Terdaftar -->
+    <div id="registerState" class="hidden flex-col gap-md">
+      <!-- Illustration -->
+      <div style="display:flex; justify-content:center; padding:12px 0;">
+        <div style="position:relative; width:180px; height:180px;">
+          <div style="width:100%; height:100%; border-radius:50%; background:rgba(76,201,240,0.12); display:flex; align-items:center; justify-content:center; border:3px dashed rgba(76,201,240,0.3);">
+            <span style="font-size:80px;" class="animate-bounce-in">🐱</span>
+          </div>
+          <span style="position:absolute; top:-4px; left:8px; font-size:24px;" class="animate-fade-in delay-1">✨</span>
+          <span style="position:absolute; bottom:12px; right:-4px; font-size:24px;" class="animate-fade-in delay-2">🤔</span>
+          <span style="position:absolute; top:50%; left:-12px; font-size:20px;" class="animate-fade-in delay-3">❓</span>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <h2 class="h2">Oops! Kartu Baru? 🎉</h2>
+        <p class="body text-secondary" style="margin-top:8px;">Siswa ini belum terdaftar di sistem CELDIG. Yuk, daftarkan sekarang agar bisa mulai menabung!</p>
+      </div>
+
+      <!-- Registration Form -->
+      <form id="registerForm" class="card card-accent flex-col gap-sm" style="margin-top:8px;">
+        <div class="form-group" style="padding-top:8px;">
+          <label class="form-label" for="studentName">👤 Nama Lengkap Siswa</label>
+          <input class="form-input" id="studentName" type="text" placeholder="Contoh: Budi Santoso" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="studentClass">🏫 Kelas</label>
+          <select class="form-input" id="studentClass">
+            <option value="" disabled selected>Pilih Kelas Siswa</option>
+            <option value="Kelas 1">Kelas 1</option>
+            <option value="Kelas 2">Kelas 2</option>
+            <option value="Kelas 3">Kelas 3</option>
+            <option value="Kelas 4">Kelas 4</option>
+            <option value="Kelas 5">Kelas 5</option>
+            <option value="Kelas 6">Kelas 6</option>
+          </select>
+        </div>
+        <div class="notice">
+          <span>ℹ️</span>
+          <span>Pastikan nama dan kelas sesuai data absen sekolah.</span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">✨ Daftarkan Siswa</button>
+      </form>
+    </div>
+
+    <!-- State 2: Sudah Terdaftar (Input Tabungan) -->
+    <div id="depositState" class="hidden flex-col gap-md">
+      <!-- Greeting -->
+      <div class="flex-between">
+        <div>
+          <p style="font-size:14px;">👋 Halo,</p>
+          <h2 class="h1 text-primary" id="childName">Budi Santoso</h2>
+        </div>
+        <span class="badge badge-secondary" id="childClass">Kelas 4</span>
+      </div>
+
+      <!-- Saldo Card -->
+      <div class="saldo-card animate-slide-up">
+        <div>
+          <p class="caption text-secondary">💰 Saldo Saat Ini</p>
+          <p class="nominal text-primary" id="childBalance">Rp 0</p>
+        </div>
+        <div style="text-align:right;">
+          <span class="badge badge-secondary" id="childPoints">⭐ 0 poin</span>
+          <p class="caption text-secondary" style="margin-top:4px;" id="childDeposits">0 kali nabung</p>
+        </div>
+      </div>
+
+      <!-- Deposit Form -->
+      <div class="card animate-slide-up delay-1">
+        <div class="flex-between mb-sm">
+          <h3 class="h3">Tambah Tabungan</h3>
+          <span style="font-size:24px;">🐱</span>
+        </div>
+        <form id="depositForm" class="flex-col gap-sm">
+          <input class="form-input form-input-big" id="depositAmount" type="number" inputmode="numeric" min="500" placeholder="0" required>
+          <div>
+            <p class="label text-secondary mb-sm" style="margin-bottom:8px;">Pilihan Cepat:</p>
+            <div class="chip-group" id="quickAmounts"></div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block mt-sm">💰 Simpan Tabungan</button>
+        </form>
+      </div>
+
+      <!-- History -->
+      <div class="animate-slide-up delay-2">
+        <div class="flex-between mb-sm">
+          <h3 class="h3">Riwayat Terakhir</h3>
+        </div>
+        <div id="historyList" class="flex-col gap-xs">
+          <p class="text-secondary text-center caption">Belum ada riwayat</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Success Overlay -->
+  <div id="successOverlay" class="overlay">
+    <div class="check-icon animate-bounce-in">✅</div>
+    <h2 class="h1">Berhasil! 🎉</h2>
+    <p class="body" style="opacity:0.9; margin-top:8px;">Tabungan berhasil disimpan</p>
+    <div class="detail-card">
+      <p class="label" id="successName">Budi Santoso</p>
+      <p class="nominal" id="successAmount" style="margin:8px 0;">+Rp 5.000</p>
+      <p class="body" id="successBalance">Saldo baru: Rp 30.000</p>
+      <p class="label" id="successPoints" style="margin-top:4px;">⭐ +1 poin</p>
+    </div>
+    <button class="btn btn-block" id="successClose" style="background:rgba(255,255,255,0.2); color:#fff; margin-top:16px; max-width:320px;">
+      Scan Berikutnya →
+    </button>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/scan.js"></script>
+</body>
+</html>
