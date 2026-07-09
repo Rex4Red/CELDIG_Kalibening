@@ -109,6 +109,7 @@ function handleRequest(e) {
       case 'verifyPin':     result = verifyPin(params.pin); break;
       case 'getHistory':    result = getHistory(params.qrId); break;
       case 'deleteStudent': result = deleteStudent(params.qrId); break;
+      case 'getSheetUrl':   result = getSheetUrl(); break;
       default: result = { error: 'Unknown action: ' + action };
     }
     
@@ -464,3 +465,11 @@ function deleteStudent(qrId) {
   
   return { success: true, message: 'Siswa dan setorannya berhasil dihapus.' };
 }
+
+// ===========================================
+// GET SHEET URL
+// ===========================================
+function getSheetUrl() {
+  return { url: SpreadsheetApp.getActiveSpreadsheet().getUrl() };
+}
+

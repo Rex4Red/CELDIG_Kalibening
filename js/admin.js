@@ -174,8 +174,17 @@
     }
   });
 
-  // --- Open Spreadsheet (placeholder) ---
-  document.getElementById('openSheetBtn').addEventListener('click', () => {
-    alert('Fitur ini akan membuka Google Spreadsheet kamu. Ganti URL di config.js setelah setup.');
+  // --- Open Spreadsheet ---
+  document.getElementById('openSheetBtn').addEventListener('click', async () => {
+    try {
+      const res = await API.request('getSheetUrl');
+      if (res.url) {
+        window.open(res.url, '_blank');
+      } else {
+        alert('URL spreadsheet tidak ditemukan');
+      }
+    } catch (err) {
+      alert('Gagal membuka spreadsheet: ' + err.message);
+    }
   });
 })();
