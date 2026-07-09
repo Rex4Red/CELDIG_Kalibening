@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CELDIG — Cetak Kartu QR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;800&family=Nunito+Sans:wght@400;600&family=Be+Vietnam+Pro:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <style>
     * { box-sizing: border-box; }
@@ -111,33 +112,127 @@
       height: 18px; margin-bottom: 4px;
     }
 
-    /* ============ BACK SIDE ============ */
+    /* ============ BACK SIDE (NEW DESIGN) ============ */
     .card-back {
-      background: linear-gradient(135deg, #FFD60A 0%, #FF9F1C 35%, #F72585 100%);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 10px 14px; text-align: center; color: #fff;
+      background: linear-gradient(135deg, #FFD60A 0%, #FF9F1C 50%, #F72585 100%);
+      display: flex; flex-direction: row;
+      align-items: stretch;
+      padding: 0; color: #fff;
+      border: 3px solid #fff;
     }
+    /* Dot pattern overlay */
     .card-back::before {
-      content: '🪙'; position: absolute; top: 6px; left: 8px;
-      font-size: 12px; opacity: 0.5;
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.3) 1.5px, transparent 1.5px);
+      background-size: 14px 14px;
+      pointer-events: none; z-index: 0;
     }
-    .card-back::after {
-      content: '🏆'; position: absolute; top: 6px; right: 8px;
-      font-size: 11px; opacity: 0.5;
+
+    /* — Left: Mascot & Tagline — */
+    .back-left {
+      width: 42%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 8px 6px; position: relative; z-index: 1;
     }
-    .card-back .back-mascot { font-size: 30px; margin-bottom: 2px; }
-    .card-back .back-tagline {
-      font-size: 15px; font-weight: 800; color: #fff;
+    .back-mascot-img {
+      width: 72px; height: 72px; object-fit: contain;
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,0.18));
+    }
+    .back-tagline {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px; font-weight: 800; color: #fff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      text-align: center; line-height: 1.25;
+      margin-top: 4px;
     }
-    .back-deco-left {
-      position: absolute; bottom: 5px; left: 8px;
-      font-size: 9px; opacity: 0.45;
+    .back-subtitle-pill {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 6.5px; color: rgba(255,255,255,0.9);
+      background: rgba(0,0,0,0.12);
+      border-radius: 20px; padding: 2px 7px;
+      margin-top: 3px; white-space: nowrap;
+      backdrop-filter: blur(2px);
     }
-    .back-deco-right {
-      position: absolute; bottom: 5px; right: 8px;
-      font-size: 9px; opacity: 0.45;
+
+    /* Decorative coins & stars */
+    .deco-coin-tl {
+      position: absolute; top: 5px; left: 5px; width: 18px; height: 18px;
+      opacity: 0.7; z-index: 2; object-fit: contain;
+    }
+    .deco-star-tr {
+      position: absolute; top: 5px; right: 5px;
+      font-size: 14px; opacity: 0.75; z-index: 2;
+      color: #FFE171;
+    }
+    .deco-star-bl {
+      position: absolute; bottom: 5px; left: 6px;
+      font-size: 12px; opacity: 0.55; z-index: 2;
+      color: #fff;
+    }
+    .deco-coin-br {
+      position: absolute; bottom: 6px; right: 50px; width: 20px; height: 20px;
+      opacity: 0.65; z-index: 2; object-fit: contain;
+      transform: rotate(12deg);
+    }
+
+    /* — Right: Instructions Box — */
+    .back-right {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; padding: 7px 8px 7px 4px;
+      position: relative; z-index: 1;
+    }
+    .back-instructions {
+      background: rgba(255,255,255,0.93);
+      border-radius: 10px; padding: 7px 9px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .back-instructions .instr-title {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 8.5px; font-weight: 700; color: #0058BD;
+      display: flex; align-items: center; gap: 3px;
+      margin-bottom: 5px;
+    }
+    .back-instructions .instr-title .material-symbols-outlined {
+      font-size: 12px; color: #0058BD;
+    }
+    .back-instructions .step-list {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .back-instructions .step-item {
+      display: flex; align-items: center; gap: 5px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 7px; color: #414754;
+    }
+    .step-num {
+      width: 14px; height: 14px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 6.5px; font-weight: 700; flex-shrink: 0;
+    }
+    .step-num-blue {
+      background: #5ED8FF; color: #005C72;
+    }
+    .step-num-gold {
+      background: #FFE171; color: #554600;
+    }
+    .step-item-highlight {
+      font-weight: 700; color: #0058BD;
+    }
+
+    /* — Footer strip — */
+    .back-footer {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.1);
+      padding: 2.5px 0; text-align: center; z-index: 3;
+      backdrop-filter: blur(2px);
+    }
+    .back-footer span {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 5.5px; color: rgba(255,255,255,0.8);
+      text-transform: uppercase; letter-spacing: 1.2px;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -148,7 +243,7 @@
       <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
     </div>
     <p class="caption text-secondary" style="margin-top:8px;font-family:'Nunito Sans',sans-serif;">
-      ✂️ Gunting → Tempel depan & belakang → Laminating!
+      ✂️ Gunting → Tempel depan &amp; belakang → Laminating!
     </p>
     <hr style="margin:16px 0; border:none; border-top:1px solid #eee;">
   </div>
@@ -168,6 +263,11 @@
         grid.innerHTML = '<p style="text-align:center;padding:40px;color:#888;font-family:Quicksand,sans-serif;">Tidak ada QR Code untuk dicetak.<br>Generate dari halaman Admin terlebih dahulu.</p>';
         return;
       }
+
+      // Coin image URL from the reference design
+      const coinImg = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBZz2ZD2_QZ2w5J26s8JPFuUvEnB33LWeUm5X8Kk8lNb8OvLXSHR1o6b-vSB6kRsgIMX9h2E5ikjaL5l2jf4hnx1vQ_6HL--ugsK0SJS0DHIKXpAQPFbVgtPuOKwwG8AlzPfjlPLoCG2Yebd4Q52OEftfjDtCOJBakce3nyHM7cC6Vp19-GF3kYn3p3qhVv2ZOiWVJzFQa5n8mijlGE0FlNeKuiqiU5yuSxODOiyFEDx_NpC1Nm-OIDuw';
+      // Cat mascot image URL from the reference design
+      const mascotImg = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxXWQzib596xfoO6iUIJQxuRLr2x2F0RV2rXl0W1vV8oCHVdhQYE21o8PQdIGfKuia8ELHjsF5vFwIq651kZHoBbsGOx2Q7_dkU_crFLp7LNJczYu1lwNDp8Sy8ZHqTZa6RcSYLxJZ9ha9pDW_Xek3sNWspsWx_AU4cBqTd7VNhzi_QQsUpsH0aRvHRGqdz6rQINAuxzrH34GvRLxEGwOzzru4lzVonfUtgL7X55HU4quCK1PCWytpauooRpq_2fs_z5Q';
 
       grid.innerHTML = '';
 
@@ -200,10 +300,51 @@
 
           <div>
             <div class="card-back">
-              <div class="back-mascot">🐱💰</div>
-              <div class="back-tagline">Menabung Itu Seru! 🎉</div>
-              <div class="back-deco-left">⭐✨</div>
-              <div class="back-deco-right">🌟🪙</div>
+              <!-- Decorative elements -->
+              <img class="deco-coin-tl" src="${coinImg}" alt="">
+              <span class="deco-star-tr material-symbols-outlined" style='font-variation-settings:"FILL" 1;'>star</span>
+              <span class="deco-star-bl material-symbols-outlined" style='font-variation-settings:"FILL" 1;'>stars</span>
+              <img class="deco-coin-br" src="${coinImg}" alt="">
+
+              <!-- Left: Mascot + Tagline -->
+              <div class="back-left">
+                <img class="back-mascot-img" src="${mascotImg}" alt="Mascot">
+                <div class="back-tagline">Menabung<br>Itu Seru! 🎉</div>
+                <div class="back-subtitle-pill">Kumpulkan ⭐ setiap menabung!</div>
+              </div>
+
+              <!-- Right: Instructions Box -->
+              <div class="back-right">
+                <div class="back-instructions">
+                  <div class="instr-title">
+                    <span class="material-symbols-outlined" style='font-variation-settings:"FILL" 1;'>info</span>
+                    Cara Pakai
+                  </div>
+                  <ul class="step-list">
+                    <li class="step-item">
+                      <div class="step-num step-num-blue">1</div>
+                      <span>Scan QR Code pada kartu</span>
+                    </li>
+                    <li class="step-item">
+                      <div class="step-num step-num-blue">2</div>
+                      <span>Isi data dengan benar</span>
+                    </li>
+                    <li class="step-item">
+                      <div class="step-num step-num-blue">3</div>
+                      <span>Setor tabungan ke petugas</span>
+                    </li>
+                    <li class="step-item">
+                      <div class="step-num step-num-gold">4</div>
+                      <span class="step-item-highlight">Dapat bintang! ⭐</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Footer strip -->
+              <div class="back-footer">
+                <span>celdig-kalibening.vercel.app</span>
+              </div>
             </div>
             <div class="card-label">▲ BELAKANG</div>
           </div>
