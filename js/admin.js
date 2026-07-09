@@ -150,4 +150,33 @@
   document.getElementById('openSheetBtn').addEventListener('click', () => {
     alert('Fitur ini akan membuka Google Spreadsheet kamu. Ganti URL di config.js setelah setup.');
   });
+
+  // --- Reset Data ---
+  document.getElementById('resetBtn').addEventListener('click', async () => {
+    const confirm1 = confirm('⚠️ PERHATIAN!\n\nSemua data siswa dan setoran akan dihapus permanen.\n\nLanjutkan?');
+    if (!confirm1) return;
+
+    const pin = prompt('Masukkan PIN admin untuk konfirmasi:');
+    if (!pin) return;
+
+    const btn = document.getElementById('resetBtn');
+    btn.disabled = true;
+    btn.textContent = 'Menghapus...';
+
+    try {
+      const res = await API.resetData(pin);
+      if (res.success) {
+        alert('✅ ' + res.message);
+        loadStats();
+        loadStudents();
+      } else {
+        alert('❌ Gagal: ' + (res.error || 'Unknown error'));
+      }
+    } catch (err) {
+      alert('❌ Error: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🗑️ Reset Semua Data';
+    }
+  });
 })();

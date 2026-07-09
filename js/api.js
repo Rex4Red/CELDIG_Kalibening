@@ -82,5 +82,10 @@ const API = {
   /** Ambil riwayat setoran anak */
   async getHistory(qrId) {
     return this.request('getHistory', { qrId });
+  },
+
+  /** Reset semua data (perlu PIN) */
+  async resetData(pin) {
+    return this.request('resetData', { pin }, 'POST');
   }
 };

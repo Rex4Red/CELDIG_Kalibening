@@ -108,6 +108,7 @@ function handleRequest(e) {
       case 'getQRList':     result = getQRList(params.status); break;
       case 'verifyPin':     result = verifyPin(params.pin); break;
       case 'getHistory':    result = getHistory(params.qrId); break;
+      case 'resetData':     result = resetData(params.pin); break;
       default: result = { error: 'Unknown action: ' + action };
     }
     
@@ -428,4 +429,31 @@ function getDepositsForChild(qrId) {
   }
   
   return deposits;
+}
+
+// ===========================================
+// RESET DATA — Hapus semua data (perlu PIN)
+// ===========================================
+function resetData(pin) {
+  // Verifikasi PIN dulu untuk keamanan
+  const pinResult = verifyPin(pin);
+  if (!pinResult.valid) {
+    return { error: 'PIN salah. Reset dibatalkan.' };
+  }
+  
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  // Clear Registry (keep header row 1)
+  const reg = ss.getSheetByName('Registry');
+  if (reg && reg.getLastRow() > 1) {
+    reg.deleteRows(2, reg.getLastRow() - 1);
+  }
+  
+  // Clear Deposits (keep header row 1)
+  const dep = ss.getSheetByName('Deposits');
+  if (dep && dep.getLastRow() > 1) {
+    dep.deleteRows(2, dep.getLastRow() - 1);
+  }
+  
+  return { success: true, message: 'Semua data siswa dan setoran berhasil dihapus.' };
 }
