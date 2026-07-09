@@ -40,27 +40,27 @@
       qrIds.forEach(async (id) => {
         const card = document.createElement('div');
         card.className = 'qr-card-print';
-
-        const canvas = document.createElement('canvas');
         const url = `${BASE_URL}/s/${id}`;
 
         try {
-          await QRCode.toCanvas(canvas, url, {
+          const dataUrl = await QRCode.toDataURL(url, {
             width: 160,
             margin: 2,
             color: { dark: '#2B2D42', light: '#FFFFFF' }
           });
+          card.innerHTML = `
+            <div style="display:flex;justify-content:center;">
+              <img src="${dataUrl}" alt="QR ${id}" style="width:160px;height:160px;">
+            </div>
+            <p class="qr-id">${id}</p>
+            <p class="qr-label">Nama: _______________</p>
+            <p class="qr-label" style="margin-top:2px;">CELDIG • Celengan Digital</p>
+          `;
         } catch (e) {
           console.error('QR gen failed:', e);
+          card.innerHTML = `<p style="color:red;">QR Error</p>`;
         }
 
-        card.innerHTML = `
-          <div style="display:flex;justify-content:center;"></div>
-          <p class="qr-id">${id}</p>
-          <p class="qr-label">Nama: _______________</p>
-          <p class="qr-label" style="margin-top:2px;">CELDIG • Celengan Digital</p>
-        `;
-        card.querySelector('div').appendChild(canvas);
         grid.appendChild(card);
       });
     })();
