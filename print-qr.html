@@ -9,133 +9,6 @@
     @media print {
       .no-print { display: none !important; }
       body { background: #fff !important; margin: 0; padding: 0; }
-      .print-grid { gap: 12px; padding: 10px; }
-    }
-
-    .mode-tabs {
-      display: flex; gap: 8px; margin: 16px 0;
-    }
-    .mode-tab {
-      flex: 1; padding: 10px; border: 2px solid #4CC9F0; border-radius: 12px;
-      background: #fff; cursor: pointer; font-weight: 600; font-size: 14px;
-      text-align: center; transition: all 0.2s;
-    }
-    .mode-tab.active {
-      background: #4CC9F0; color: #fff;
-    }
-
-    /* === STUDENT CARD (Kartu Siswa) === */
-    .student-card {
-      width: 85.6mm; height: 53.98mm; /* CR80 card size */
-      border: 2px solid #4CC9F0;
-      border-radius: 12px;
-      display: flex;
-      overflow: hidden;
-      background: linear-gradient(135deg, #E8F8FF 0%, #F0F4FF 100%);
-      page-break-inside: avoid;
-      position: relative;
-      box-sizing: border-box;
-    }
-    .student-card .card-left {
-      width: 38%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
-      background: linear-gradient(180deg, #4CC9F0 0%, #3A86FF 100%);
-      gap: 4px;
-    }
-    .student-card .card-left img {
-      width: 90px; height: 90px;
-      image-rendering: pixelated;
-      border-radius: 6px;
-      background: #fff;
-      padding: 4px;
-    }
-    .student-card .card-left .qr-id-label {
-      color: #fff;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      opacity: 0.9;
-    }
-    .student-card .card-right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 10px 12px;
-      gap: 4px;
-    }
-    .student-card .card-brand {
-      font-size: 14px;
-      font-weight: 800;
-      color: #3A86FF;
-      display: flex; align-items: center; gap: 4px;
-    }
-    .student-card .card-brand .emoji {
-      font-size: 18px;
-    }
-    .student-card .card-subtitle {
-      font-size: 8px;
-      color: #7B8794;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
-    }
-    .student-card .card-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: #2B2D42;
-      border-bottom: 1.5px solid #4CC9F0;
-      padding-bottom: 2px;
-      min-height: 18px;
-    }
-    .student-card .card-class {
-      font-size: 10px;
-      color: #5A6272;
-      font-weight: 500;
-    }
-    .student-card .card-footer {
-      font-size: 7px;
-      color: #A0AEC0;
-      margin-top: auto;
-    }
-
-    /* Decorative shapes */
-    .student-card::after {
-      content: '';
-      position: absolute;
-      bottom: -15px; right: -15px;
-      width: 50px; height: 50px;
-      background: rgba(76, 201, 240, 0.1);
-      border-radius: 50%;
-    }
-
-    /* === LABEL MODE (QR kecil) === */
-    .qr-label-card {
-      width: 50mm; height: 60mm;
-      border: 1.5px dashed #ccc;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
-      page-break-inside: avoid;
-      gap: 4px;
-    }
-    .qr-label-card img {
-      width: 100px; height: 100px;
-      image-rendering: pixelated;
-    }
-    .qr-label-card .label-id {
-      font-size: 11px; font-weight: 700; color: #2B2D42;
-    }
-    .qr-label-card .label-brand {
-      font-size: 8px; color: #999;
     }
 
     .print-grid {
@@ -145,118 +18,121 @@
       padding: 20px;
       justify-content: center;
     }
+
+    .qr-card-print {
+      width: 85.6mm; height: 53.98mm;
+      border: 1.5px dashed #ccc;
+      border-radius: 12px;
+      display: flex;
+      overflow: hidden;
+      page-break-inside: avoid;
+      box-sizing: border-box;
+    }
+
+    .qr-card-print .card-left {
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      background: linear-gradient(180deg, #4CC9F0 0%, #3A86FF 100%);
+      gap: 4px;
+    }
+    .qr-card-print .card-left img {
+      width: 100px; height: 100px;
+      image-rendering: pixelated;
+      border-radius: 6px;
+      background: #fff;
+      padding: 4px;
+    }
+    .qr-card-print .card-left .qr-id-label {
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .qr-card-print .card-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 12px;
+      gap: 3px;
+    }
+    .qr-card-print .card-brand {
+      font-size: 14px; font-weight: 800; color: #3A86FF;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .qr-card-print .card-subtitle {
+      font-size: 8px; color: #999; text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .qr-card-print .card-field {
+      font-size: 9px; color: #666; font-weight: 500;
+    }
+    .qr-card-print .card-line {
+      border-bottom: 1.5px dotted #ccc;
+      height: 16px;
+      margin-bottom: 2px;
+    }
+    .qr-card-print .card-footer {
+      font-size: 7px; color: #aaa; margin-top: auto;
+    }
   </style>
 </head>
 <body style="background:#fff;">
   <div class="no-print container" style="padding:20px 20px 0;">
     <div class="flex-between">
-      <h1 class="h2">🖨️ Cetak QR Code</h1>
+      <h1 class="h2">🖨️ Cetak Kartu QR</h1>
       <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
     </div>
-
-    <div class="mode-tabs">
-      <div class="mode-tab active" id="tabLabel" onclick="switchMode('label')">
-        🏷️ Label QR<br><span style="font-size:11px;font-weight:400;opacity:0.7;">Stiker sementara</span>
-      </div>
-      <div class="mode-tab" id="tabCard" onclick="switchMode('card')">
-        💳 Kartu Siswa<br><span style="font-size:11px;font-weight:400;opacity:0.7;">Siap laminating</span>
-      </div>
-    </div>
+    <p class="caption text-secondary" style="margin-top:8px;">Gunting di garis putus-putus. Siswa mengisi nama & kelas sendiri dengan pulpen/spidol.</p>
+    <hr style="margin:16px 0; border:none; border-top:1px solid #eee;">
   </div>
 
   <div class="print-grid" id="qrGrid">
-    <div class="loading-state"><div class="spinner"></div><p>Loading...</p></div>
+    <div class="loading-state"><div class="spinner"></div><p>Generating QR codes...</p></div>
   </div>
 
   <script src="/js/config.js"></script>
-  <script src="/js/api.js"></script>
   <script>
-    const BASE_URL = window.location.origin;
-    const grid = document.getElementById('qrGrid');
-    let currentMode = 'label';
-    let qrIdsFromSession = [];
-    let studentsData = [];
+    (function() {
+      const BASE_URL = window.location.origin;
+      const grid = document.getElementById('qrGrid');
+      const qrIds = JSON.parse(sessionStorage.getItem('celdig_print_qrs') || '[]');
 
-    function switchMode(mode) {
-      currentMode = mode;
-      document.getElementById('tabLabel').classList.toggle('active', mode === 'label');
-      document.getElementById('tabCard').classList.toggle('active', mode === 'card');
-      render();
-    }
-
-    function getQRImgUrl(id, size = 120) {
-      const url = `${BASE_URL}/s/${id}`;
-      return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&color=2B2D42`;
-    }
-
-    function render() {
-      if (currentMode === 'label') {
-        renderLabels();
-      } else {
-        renderCards();
-      }
-    }
-
-    // Mode 1: Label QR kecil (sebelum registrasi)
-    function renderLabels() {
-      const ids = qrIdsFromSession;
-      if (!ids.length) {
-        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#888;">Tidak ada QR. Generate dari Admin dulu.</p>';
-        return;
-      }
-      grid.innerHTML = ids.map(id => `
-        <div class="qr-label-card">
-          <img src="${getQRImgUrl(id, 100)}" alt="QR ${id}">
-          <div class="label-id">${id}</div>
-          <div class="label-brand">CELDIG • Celengan Digital</div>
-        </div>
-      `).join('');
-    }
-
-    // Mode 2: Kartu siswa (setelah registrasi, siap laminating)
-    async function renderCards() {
-      if (!studentsData.length) {
-        grid.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Memuat data siswa...</p></div>';
-        try {
-          const res = await API.getStudents();
-          studentsData = res.students || [];
-        } catch (err) {
-          grid.innerHTML = '<p style="text-align:center;padding:40px;color:#888;">Gagal memuat data: ' + err.message + '</p>';
-          return;
-        }
-      }
-
-      if (!studentsData.length) {
-        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#888;">Belum ada siswa terdaftar. Registrasikan siswa dulu via scan QR.</p>';
+      if (!qrIds.length) {
+        grid.innerHTML = '<p style="text-align:center;padding:40px;color:#888;">Tidak ada QR Code untuk dicetak. Generate dari halaman Admin terlebih dahulu.</p>';
         return;
       }
 
-      grid.innerHTML = studentsData.map(s => `
-        <div class="student-card">
+      grid.innerHTML = '';
+
+      qrIds.forEach((id) => {
+        const url = `${BASE_URL}/s/${id}`;
+        const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(url)}&color=2B2D42`;
+
+        const card = document.createElement('div');
+        card.className = 'qr-card-print';
+        card.innerHTML = `
           <div class="card-left">
-            <img src="${getQRImgUrl(s.qrId, 120)}" alt="QR ${s.qrId}">
-            <div class="qr-id-label">${s.qrId}</div>
+            <img src="${qrImgUrl}" alt="QR ${id}">
+            <div class="qr-id-label">${id}</div>
           </div>
           <div class="card-right">
-            <div class="card-brand"><span class="emoji">🐱</span> CELDIG</div>
+            <div class="card-brand">🐱 CELDIG</div>
             <div class="card-subtitle">Celengan Digital</div>
-            <div class="card-name">${s.name}</div>
-            <div class="card-class">📚 ${s.className || '-'}</div>
+            <div class="card-field">Nama:</div>
+            <div class="card-line"></div>
+            <div class="card-field">Kelas:</div>
+            <div class="card-line"></div>
             <div class="card-footer">SD N Kalibening • Tabungan Siswa</div>
           </div>
-        </div>
-      `).join('');
-    }
-
-    // Init
-    qrIdsFromSession = JSON.parse(sessionStorage.getItem('celdig_print_qrs') || '[]');
-
-    // Auto-select mode based on context
-    if (qrIdsFromSession.length) {
-      switchMode('label');
-    } else {
-      switchMode('card');
-    }
+        `;
+        grid.appendChild(card);
+      });
+    })();
   </script>
 </body>
 </html>
