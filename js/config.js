@@ -21,9 +21,15 @@ const CONFIG = {
     return 'Rp ' + Number(num).toLocaleString('id-ID');
   },
 
-  // Get QR ID from URL
+  // Get QR ID from URL (supports both ?id=X and /s/X)
   getQRIdFromURL() {
+    // Try query param first (from rewrite)
     const params = new URLSearchParams(window.location.search);
-    return params.get('id') || null;
+    const fromQuery = params.get('id');
+    if (fromQuery) return fromQuery;
+
+    // Fallback: extract from path /s/QR-XXXX
+    const match = window.location.pathname.match(/\/s\/(.+)/);
+    return match ? decodeURIComponent(match[1]) : null;
   }
 };
