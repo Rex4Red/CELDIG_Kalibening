@@ -105,7 +105,7 @@
       }
 
       container.innerHTML = students.map((s, i) => `
-        <div class="student-item" style="position:relative;">
+        <div class="student-item" style="display:flex; align-items:center; gap:10px;">
           <div class="student-avatar" style="background:${AVATAR_COLORS[i % AVATAR_COLORS.length]}">
             ${AVATARS[i % AVATARS.length]}
           </div>
@@ -113,12 +113,12 @@
             <div class="name">${s.name}</div>
             <div class="meta">${s.className || '-'} · ${s.qrId}</div>
           </div>
-          <div class="student-saldo" style="text-align:right;">
+          <div class="student-saldo" style="text-align:right; margin-right:8px;">
             <div class="amount">${CONFIG.formatRupiah(s.balance || 0)}</div>
             <div class="poin">⭐ ${s.points || 0}</div>
           </div>
           <button class="btn-delete" data-qrid="${s.qrId}" data-name="${s.name}" title="Hapus siswa"
-            style="position:absolute; top:8px; right:8px; background:none; border:none; cursor:pointer; font-size:16px; opacity:0.4; padding:4px;">✕</button>
+            style="background:#F72585; color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:14px; padding:6px 10px; flex-shrink:0;">🗑️</button>
         </div>
       `).join('');
 
