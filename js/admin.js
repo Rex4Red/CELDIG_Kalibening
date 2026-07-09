@@ -105,20 +105,48 @@
       }
 
       container.innerHTML = students.map((s, i) => `
-        <div class="student-item">
+        <div class="student-item" style="position:relative;">
           <div class="student-avatar" style="background:${AVATAR_COLORS[i % AVATAR_COLORS.length]}">
             ${AVATARS[i % AVATARS.length]}
           </div>
-          <div class="student-info">
+          <div class="student-info" style="flex:1; min-width:0;">
             <div class="name">${s.name}</div>
-            <div class="meta">${s.className || '-'}</div>
+            <div class="meta">${s.className || '-'} · ${s.qrId}</div>
           </div>
-          <div class="student-saldo">
+          <div class="student-saldo" style="text-align:right;">
             <div class="amount">${CONFIG.formatRupiah(s.balance || 0)}</div>
             <div class="poin">⭐ ${s.points || 0}</div>
           </div>
+          <button class="btn-delete" data-qrid="${s.qrId}" data-name="${s.name}" title="Hapus siswa"
+            style="position:absolute; top:8px; right:8px; background:none; border:none; cursor:pointer; font-size:16px; opacity:0.4; padding:4px;">✕</button>
         </div>
       `).join('');
+
+      // Attach delete handlers
+      container.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const qrId = btn.dataset.qrid;
+          const name = btn.dataset.name;
+
+          if (!confirm(`Hapus siswa "${name}" (${qrId}) beserta semua setorannya?`)) return;
+
+          btn.textContent = '⏳';
+          btn.disabled = true;
+
+          try {
+            const res = await API.deleteStudent(qrId);
+            if (res.success) {
+              loadStats();
+              loadStudents();
+            } else {
+              alert('❌ ' + (res.error || 'Gagal menghapus'));
+            }
+          } catch (err) {
+            alert('❌ Error: ' + err.message);
+          }
+        });
+      });
     } catch (err) {
       container.innerHTML = '<p class="text-secondary text-center">Gagal memuat data</p>';
     }
@@ -149,34 +177,5 @@
   // --- Open Spreadsheet (placeholder) ---
   document.getElementById('openSheetBtn').addEventListener('click', () => {
     alert('Fitur ini akan membuka Google Spreadsheet kamu. Ganti URL di config.js setelah setup.');
-  });
-
-  // --- Reset Data ---
-  document.getElementById('resetBtn').addEventListener('click', async () => {
-    const confirm1 = confirm('⚠️ PERHATIAN!\n\nSemua data siswa dan setoran akan dihapus permanen.\n\nLanjutkan?');
-    if (!confirm1) return;
-
-    const pin = prompt('Masukkan PIN admin untuk konfirmasi:');
-    if (!pin) return;
-
-    const btn = document.getElementById('resetBtn');
-    btn.disabled = true;
-    btn.textContent = 'Menghapus...';
-
-    try {
-      const res = await API.resetData(pin);
-      if (res.success) {
-        alert('✅ ' + res.message);
-        loadStats();
-        loadStudents();
-      } else {
-        alert('❌ Gagal: ' + (res.error || 'Unknown error'));
-      }
-    } catch (err) {
-      alert('❌ Error: ' + err.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '🗑️ Reset Semua Data';
-    }
   });
 })();

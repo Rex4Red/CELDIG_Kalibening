@@ -84,8 +84,8 @@ const API = {
     return this.request('getHistory', { qrId });
   },
 
-  /** Reset semua data (perlu PIN) */
-  async resetData(pin) {
-    return this.request('resetData', { pin }, 'POST');
+  /** Hapus 1 siswa + setorannya */
+  async deleteStudent(qrId) {
+    return this.request('deleteStudent', { qrId }, 'POST');
   }
 };

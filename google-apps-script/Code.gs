@@ -108,7 +108,7 @@ function handleRequest(e) {
       case 'getQRList':     result = getQRList(params.status); break;
       case 'verifyPin':     result = verifyPin(params.pin); break;
       case 'getHistory':    result = getHistory(params.qrId); break;
-      case 'resetData':     result = resetData(params.pin); break;
+      case 'deleteStudent': result = deleteStudent(params.qrId); break;
       default: result = { error: 'Unknown action: ' + action };
     }
     
@@ -432,28 +432,35 @@ function getDepositsForChild(qrId) {
 }
 
 // ===========================================
-// RESET DATA — Hapus semua data (perlu PIN)
+// DELETE STUDENT — Hapus 1 siswa + setorannya
 // ===========================================
-function resetData(pin) {
-  // Verifikasi PIN dulu untuk keamanan
-  const pinResult = verifyPin(pin);
-  if (!pinResult.valid) {
-    return { error: 'PIN salah. Reset dibatalkan.' };
-  }
+function deleteStudent(qrId) {
+  if (!qrId) return { error: 'qrId diperlukan' };
   
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   
-  // Clear Registry (keep header row 1)
+  // Delete from Registry
   const reg = ss.getSheetByName('Registry');
-  if (reg && reg.getLastRow() > 1) {
-    reg.deleteRows(2, reg.getLastRow() - 1);
+  const regData = reg.getDataRange().getValues();
+  let deleted = false;
+  for (let i = regData.length - 1; i >= 1; i--) {
+    if (regData[i][0] === qrId) {
+      reg.deleteRow(i + 1);
+      deleted = true;
+      break;
+    }
   }
   
-  // Clear Deposits (keep header row 1)
+  if (!deleted) return { error: 'Siswa tidak ditemukan' };
+  
+  // Delete all deposits for this qrId
   const dep = ss.getSheetByName('Deposits');
-  if (dep && dep.getLastRow() > 1) {
-    dep.deleteRows(2, dep.getLastRow() - 1);
+  const depData = dep.getDataRange().getValues();
+  for (let i = depData.length - 1; i >= 1; i--) {
+    if (depData[i][1] === qrId) {
+      dep.deleteRow(i + 1);
+    }
   }
   
-  return { success: true, message: 'Semua data siswa dan setoran berhasil dihapus.' };
+  return { success: true, message: 'Siswa dan setorannya berhasil dihapus.' };
 }
