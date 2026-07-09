@@ -14,8 +14,7 @@
     @media print {
       .no-print { display: none !important; }
       body { margin: 0; padding: 0; }
-      .print-grid { gap: 8px !important; padding: 8px !important; }
-      .card-wrapper { break-inside: avoid; }
+      .print-grid { padding: 6mm !important; }
       * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
@@ -24,44 +23,67 @@
     }
 
     .print-grid {
-      display: flex; flex-wrap: wrap; gap: 16px;
+      display: flex; flex-wrap: wrap; gap: 20px;
       padding: 20px; justify-content: center;
     }
 
-    /* ============ WRAPPER (front + back side-by-side) ============ */
-    .card-wrapper {
-      display: flex; gap: 6px; align-items: flex-start;
+    /* ============ CARD PAIR (front + fold + back) ============ */
+    .card-pair {
+      display: flex; align-items: stretch;
+      break-inside: avoid;
+      page-break-inside: avoid;
     }
-    .card-label {
-      font-size: 7px; text-align: center; color: #aaa;
-      font-family: 'Quicksand', sans-serif; margin-top: 2px;
+
+    /* Fold line in the middle */
+    .fold-line {
+      width: 0;
+      border-left: 1.5px dashed #ccc;
+      position: relative;
+    }
+    .fold-label {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-90deg);
+      font-size: 6px; color: #bbb;
+      white-space: nowrap;
+      font-family: 'Nunito Sans', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Corner cut marks */
+    .card-pair::before,
+    .card-pair::after {
+      content: ''; position: absolute;
+    }
+
+    /* ============ SHARED CARD SIZE ============ */
+    .card-front, .card-back {
+      width: 85.6mm; height: 53.98mm;
+      overflow: hidden; position: relative;
     }
 
     /* ============ FRONT SIDE ============ */
     .card-front {
-      width: 85.6mm; height: 53.98mm;
-      border: 2px solid #4CC9F0;
-      border-radius: 16px;
-      display: flex; overflow: hidden;
-      position: relative;
+      border: 1.5px solid #e0e0e0;
+      border-right: none;
+      border-radius: 12px 0 0 12px;
+      display: flex;
       background: #fff;
     }
 
-    /* Polkadot pattern overlay on the right side */
     .card-front::before {
       content: '';
       position: absolute; top: 0; right: 0;
       width: 60%; height: 100%;
-      background-image: radial-gradient(circle, rgba(58,134,255,0.06) 1.5px, transparent 1.5px);
+      background-image: radial-gradient(circle, rgba(58,134,255,0.05) 1.5px, transparent 1.5px);
       background-size: 12px 12px;
       pointer-events: none;
     }
-
-    /* Star decorations */
     .card-front::after {
       content: '⭐✨';
       position: absolute; top: 5px; right: 8px;
-      font-size: 10px; opacity: 0.7;
+      font-size: 9px; opacity: 0.6;
     }
 
     .card-front .qr-zone {
@@ -69,25 +91,21 @@
       align-items: center; justify-content: center;
       padding: 8px;
       background: linear-gradient(170deg, #4CC9F0 0%, #3A86FF 60%, #7B2FF7 100%);
-      gap: 4px; position: relative;
+      position: relative;
     }
     .card-front .qr-zone::before {
       content: '⭐'; position: absolute; top: 6px; left: 6px;
-      font-size: 8px; opacity: 0.6;
+      font-size: 7px; opacity: 0.5;
     }
     .card-front .qr-zone::after {
       content: '✨'; position: absolute; bottom: 8px; right: 6px;
-      font-size: 8px; opacity: 0.5;
+      font-size: 7px; opacity: 0.4;
     }
     .card-front .qr-zone img {
       width: 100px; height: 100px;
       image-rendering: pixelated;
       border-radius: 10px; background: #fff;
       padding: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    .card-front .qr-zone .qr-id {
-      color: #fff; font-size: 9px; font-weight: 700;
-      letter-spacing: 1px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .card-front .info-zone {
@@ -97,15 +115,15 @@
     .card-front .brand {
       display: flex; align-items: center; gap: 5px;
     }
-    .card-front .brand .mascot { font-size: 22px; }
+    .card-front .brand .mascot { font-size: 20px; }
     .card-front .brand .title {
       font-size: 18px; font-weight: 800; color: #3A86FF;
       letter-spacing: -0.5px;
     }
     .card-front .subtitle {
       font-family: 'Nunito Sans', sans-serif;
-      font-size: 8px; color: #999; text-transform: uppercase;
-      letter-spacing: 1.5px; margin-bottom: 6px;
+      font-size: 7.5px; color: #aaa; text-transform: uppercase;
+      letter-spacing: 1.5px; margin-bottom: 8px;
     }
     .card-front .field-label {
       font-size: 9px; color: #3A86FF; font-weight: 700;
@@ -113,23 +131,14 @@
     }
     .card-front .field-line {
       border-bottom: 2px dotted #4CC9F0;
-      height: 18px; margin-bottom: 3px;
-    }
-    .card-front .footer-text {
-      font-family: 'Nunito Sans', sans-serif;
-      font-size: 7px; color: #bbb; margin-top: auto;
-      display: flex; align-items: center; gap: 3px;
-    }
-    .card-front .footer-text .dot {
-      width: 3px; height: 3px; background: #4CC9F0;
-      border-radius: 50%; display: inline-block;
+      height: 18px; margin-bottom: 4px;
     }
 
     /* ============ BACK SIDE ============ */
     .card-back {
-      width: 85.6mm; height: 53.98mm;
-      border-radius: 16px; overflow: hidden;
-      position: relative;
+      border: 1.5px solid #e0e0e0;
+      border-left: none;
+      border-radius: 0 12px 12px 0;
       background: linear-gradient(135deg, #FFD60A 0%, #FF9F1C 35%, #F72585 100%);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
@@ -138,51 +147,33 @@
     }
     .card-back::before {
       content: '🪙'; position: absolute; top: 6px; left: 8px;
-      font-size: 14px; opacity: 0.6;
+      font-size: 12px; opacity: 0.5;
     }
     .card-back::after {
       content: '🏆'; position: absolute; top: 6px; right: 8px;
-      font-size: 12px; opacity: 0.6;
+      font-size: 11px; opacity: 0.5;
     }
 
-    .card-back .back-mascot { font-size: 28px; margin-bottom: 2px; }
+    .card-back .back-mascot { font-size: 30px; margin-bottom: 2px; }
     .card-back .back-tagline {
-      font-size: 14px; font-weight: 800; color: #fff;
+      font-size: 15px; font-weight: 800; color: #fff;
       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      margin-bottom: 1px;
     }
-    .card-back .back-subtagline {
-      font-family: 'Nunito Sans', sans-serif;
-      font-size: 8px; color: rgba(255,255,255,0.9);
-      margin-bottom: 6px;
-    }
-    .card-back .steps {
-      display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
-    }
-    .card-back .step-bubble {
-      background: rgba(255,255,255,0.25);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,0.4);
-      border-radius: 20px;
-      padding: 3px 8px;
-      font-size: 8px; font-weight: 700; color: #fff;
-      white-space: nowrap;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
-    }
-    .card-back .back-footer {
-      position: absolute; bottom: 5px;
-      font-family: 'Nunito Sans', sans-serif;
-      font-size: 7px; color: rgba(255,255,255,0.6);
-    }
-
-    /* Bottom corner decorations */
     .back-deco-left {
-      position: absolute; bottom: 4px; left: 8px;
-      font-size: 10px; opacity: 0.5;
+      position: absolute; bottom: 5px; left: 8px;
+      font-size: 9px; opacity: 0.45;
     }
     .back-deco-right {
-      position: absolute; bottom: 4px; right: 8px;
-      font-size: 10px; opacity: 0.5;
+      position: absolute; bottom: 5px; right: 8px;
+      font-size: 9px; opacity: 0.45;
+    }
+
+    /* ============ GUIDE TEXT ============ */
+    .card-guide {
+      width: 100%; text-align: center;
+      font-size: 7px; color: #ccc;
+      font-family: 'Nunito Sans', sans-serif;
+      margin-top: 2px; letter-spacing: 0.5px;
     }
   </style>
 </head>
@@ -193,7 +184,7 @@
       <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
     </div>
     <p class="caption text-secondary" style="margin-top:8px;font-family:'Nunito Sans',sans-serif;">
-      ✂️ Gunting di tepi kartu → Siswa isi nama & kelas dengan pulpen/spidol → Laminating!
+      ✂️ Gunting tepi luar → Lipat di garis tengah → Lem/Laminating!
     </p>
     <hr style="margin:16px 0; border:none; border-top:1px solid #eee;">
   </div>
@@ -220,11 +211,10 @@
         const url = `${BASE_URL}/s/${id}`;
         const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(url)}&color=2B2D42`;
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'card-wrapper';
-        wrapper.innerHTML = `
-          <!-- FRONT SIDE -->
-          <div>
+        const container = document.createElement('div');
+        container.innerHTML = `
+          <div class="card-pair">
+            <!-- FRONT -->
             <div class="card-front">
               <div class="qr-zone">
                 <img src="${qrImgUrl}" alt="QR ${id}">
@@ -239,24 +229,25 @@
                 <div class="field-line"></div>
                 <div class="field-label">Kelas:</div>
                 <div class="field-line"></div>
-
               </div>
             </div>
-            <div class="card-label">▲ DEPAN</div>
-          </div>
 
-          <!-- BACK SIDE -->
-          <div>
+            <!-- FOLD LINE -->
+            <div class="fold-line">
+              <div class="fold-label">✂ lipat sini</div>
+            </div>
+
+            <!-- BACK -->
             <div class="card-back">
               <div class="back-mascot">🐱💰</div>
               <div class="back-tagline">Menabung Itu Seru! 🎉</div>
               <div class="back-deco-left">⭐✨</div>
               <div class="back-deco-right">🌟🪙</div>
             </div>
-            <div class="card-label">▲ BELAKANG</div>
           </div>
+          <div class="card-guide">✂ gunting tepi luar → lipat tengah → laminating</div>
         `;
-        grid.appendChild(wrapper);
+        grid.appendChild(container);
       });
     })();
   </script>
