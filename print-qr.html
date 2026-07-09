@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CELDIG — Cetak QR Code</title>
   <link rel="stylesheet" href="/css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
 </head>
 <body style="background:#fff;">
   <div class="no-print container" style="padding:20px 20px 0;">
@@ -27,7 +26,6 @@
       const BASE_URL = window.location.origin;
       const grid = document.getElementById('qrGrid');
 
-      // Get QR IDs from session storage (set by admin page)
       const qrIds = JSON.parse(sessionStorage.getItem('celdig_print_qrs') || '[]');
 
       if (!qrIds.length) {
@@ -37,30 +35,20 @@
 
       grid.innerHTML = '';
 
-      qrIds.forEach(async (id) => {
+      qrIds.forEach((id) => {
+        const url = `${BASE_URL}/s/${id}`;
+        const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(url)}&color=2B2D42`;
+
         const card = document.createElement('div');
         card.className = 'qr-card-print';
-        const url = `${BASE_URL}/s/${id}`;
-
-        try {
-          const dataUrl = await QRCode.toDataURL(url, {
-            width: 160,
-            margin: 2,
-            color: { dark: '#2B2D42', light: '#FFFFFF' }
-          });
-          card.innerHTML = `
-            <div style="display:flex;justify-content:center;">
-              <img src="${dataUrl}" alt="QR ${id}" style="width:160px;height:160px;">
-            </div>
-            <p class="qr-id">${id}</p>
-            <p class="qr-label">Nama: _______________</p>
-            <p class="qr-label" style="margin-top:2px;">CELDIG • Celengan Digital</p>
-          `;
-        } catch (e) {
-          console.error('QR gen failed:', e);
-          card.innerHTML = `<p style="color:red;">QR Error</p>`;
-        }
-
+        card.innerHTML = `
+          <div style="display:flex;justify-content:center;">
+            <img src="${qrImgUrl}" alt="QR ${id}" width="160" height="160" style="image-rendering:pixelated;">
+          </div>
+          <p class="qr-id">${id}</p>
+          <p class="qr-label">Nama: _______________</p>
+          <p class="qr-label" style="margin-top:2px;">CELDIG • Celengan Digital</p>
+        `;
         grid.appendChild(card);
       });
     })();
