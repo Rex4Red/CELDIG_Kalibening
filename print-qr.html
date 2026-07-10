@@ -46,61 +46,47 @@
     }
 
     /* ====================================================
-       FRONT SIDE — ATM-style card
-       Left: Blue gradient zone with QR
-       Right: White zone with brand + fields
+       FRONT SIDE — Full cyan/blue background ATM card
+       Matching the SVG reference design
        ==================================================== */
     .card-front {
-      display: flex; background: #fff;
-      border: 2.5px solid #4CC9F0;
+      background: linear-gradient(135deg, #4CC9F0 0%, #3A86FF 60%, #7B2FF7 100%);
+      display: flex; flex-direction: row;
+      align-items: stretch;
+      border: 3px solid #4CC9F0;
+      color: #fff;
     }
-    /* Dot pattern on right side */
+    /* Dot pattern overlay on front */
     .card-front::before {
       content: '';
-      position: absolute; top: 0; right: 0;
-      width: 60%; height: 100%;
-      background-image: radial-gradient(circle, rgba(58,134,255,0.06) 1.5px, transparent 1.5px);
-      background-size: 10px 10px;
-      pointer-events: none;
-    }
-    /* Decorative sparkles */
-    .card-front::after {
-      content: '⭐✨';
-      position: absolute; top: 5px; right: 8px;
-      font-size: 9px; opacity: 0.55;
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.15) 1.5px, transparent 1.5px);
+      background-size: 12px 12px;
+      pointer-events: none; z-index: 0;
     }
 
-    /* — QR Zone (Left) — */
+    /* — Front: QR zone (left ~38%) — */
     .front-qr-zone {
       width: 38%; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       padding: 8px;
-      background: linear-gradient(170deg, #4CC9F0 0%, #3A86FF 50%, #7B2FF7 100%);
-      position: relative;
-    }
-    .front-qr-zone::before {
-      content: '⭐'; position: absolute; top: 6px; left: 6px;
-      font-size: 7px; opacity: 0.45;
-    }
-    .front-qr-zone::after {
-      content: '✨'; position: absolute; bottom: 8px; right: 6px;
-      font-size: 7px; opacity: 0.35;
+      position: relative; z-index: 1;
     }
     .front-qr-zone img.qr-img {
       width: 100px; height: 100px;
       image-rendering: pixelated;
       border-radius: 10px; background: #fff;
       padding: 5px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.2);
     }
     .front-qr-label {
-      font-family: 'Nunito Sans', sans-serif;
-      font-size: 5.5px; color: rgba(255,255,255,0.75);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 6px; color: rgba(255,255,255,0.7);
       text-transform: uppercase; letter-spacing: 1px;
       margin-top: 4px;
     }
 
-    /* — Info Zone (Right) — */
+    /* — Front: Info zone (right ~62%) — */
     .front-info-zone {
       flex: 1; display: flex; flex-direction: column;
       padding: 10px 14px 8px; position: relative; z-index: 1;
@@ -108,52 +94,65 @@
     .front-brand {
       display: flex; align-items: center; gap: 5px;
     }
-    .front-brand .mascot-emoji { font-size: 20px; }
+    .front-brand .mascot-emoji { font-size: 22px; }
     .front-brand .brand-title {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 18px; font-weight: 800; color: #3A86FF;
+      font-size: 20px; font-weight: 800; color: #fff;
       letter-spacing: -0.5px;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
     .front-subtitle {
-      font-family: 'Nunito Sans', sans-serif;
-      font-size: 7.5px; color: #aaa; text-transform: uppercase;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 7px; color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
       letter-spacing: 1.5px; margin-bottom: 8px;
     }
     .front-field-label {
       font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 6.5px; color: #3A86FF; font-weight: 700;
+      font-size: 7px; color: rgba(255,255,255,0.85); font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.8px;
       margin-top: 2px;
     }
     .front-field-line {
-      border-bottom: 1.5px dotted #4CC9F0;
+      border-bottom: 1.5px dotted rgba(255,255,255,0.5);
       height: 16px; margin-bottom: 2px;
     }
     .front-footer-strip {
       margin-top: auto;
-      font-family: 'Nunito Sans', sans-serif;
-      font-size: 5px; color: #ccc;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 5px; color: rgba(255,255,255,0.45);
       text-align: right; letter-spacing: 0.5px;
     }
 
+    /* Decorative sparkles on front */
+    .front-deco {
+      position: absolute; z-index: 2; pointer-events: none;
+    }
+    .front-star-tl { top: 5px; left: 6px; font-size: 8px; opacity: 0.4; }
+    .front-star-tr { top: 5px; right: 8px; font-size: 9px; opacity: 0.5; }
+    .front-star-br { bottom: 8px; right: 8px; font-size: 7px; opacity: 0.35; }
+
     /* ====================================================
-       BACK SIDE — Playful kids card (from stitch reference)
-       Vertical flow: Mascot top → Instructions → Footer
-       Adapted to horizontal CR80 card
+       BACK SIDE — Matching screen.png reference exactly:
+       - Full gradient background (yellow → orange → pink)
+       - Large mascot centered
+       - Floating coins & stars
+       - Dot pattern overlay
+       - CLEAN design, NO instruction box
        ==================================================== */
     .card-back {
       background: linear-gradient(135deg, #FFD60A 0%, #FF9F1C 50%, #F72585 100%);
-      display: flex; flex-direction: row;
-      align-items: stretch;
+      display: flex;
+      align-items: center; justify-content: center;
       color: #fff;
-      border: 3px solid #fff;
+      border: 3px solid #FFD60A;
     }
     /* Dot pattern overlay */
     .card-back::before {
       content: '';
       position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(255,255,255,0.35) 1.5px, transparent 1.5px);
-      background-size: 14px 14px;
+      background-image: radial-gradient(rgba(255,255,255,0.3) 2px, transparent 2px);
+      background-size: 16px 16px;
       pointer-events: none; z-index: 0;
     }
 
@@ -162,104 +161,33 @@
       position: absolute; z-index: 2; pointer-events: none;
     }
     .deco-coin-tl {
-      top: 4px; left: 4px; width: 20px; height: 20px;
-      opacity: 0.75; object-fit: contain;
+      top: 8px; left: 8px; width: 32px; height: 32px;
+      opacity: 0.8; object-fit: contain;
     }
     .deco-star-tr {
-      top: 4px; right: 5px;
-      font-size: 16px; opacity: 0.8;
+      top: 8px; right: 10px;
+      font-size: 22px; opacity: 0.85;
       color: #FFE171;
     }
     .deco-star-bl {
-      bottom: 14px; left: 5px;
-      font-size: 13px; opacity: 0.55;
+      bottom: 18px; left: 8px;
+      font-size: 18px; opacity: 0.6;
       color: #fff;
     }
     .deco-coin-br {
-      bottom: 14px; right: 48px; width: 22px; height: 22px;
-      opacity: 0.7; object-fit: contain;
+      bottom: 10px; right: 10px; width: 36px; height: 36px;
+      opacity: 0.75; object-fit: contain;
       transform: rotate(12deg);
     }
 
-    /* — Left column: Mascot + Tagline — */
-    .back-left {
-      width: 40%; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 8px 6px; position: relative; z-index: 1;
+    /* — Center: Large Mascot — */
+    .back-mascot-container {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
     }
     .back-mascot-img {
-      width: 76px; height: 76px; object-fit: contain;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
-    }
-    .back-tagline {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 11px; font-weight: 800; color: #fff;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      text-align: center; line-height: 1.2;
-      margin-top: 4px;
-    }
-    .back-subtitle-pill {
-      font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 6px; color: rgba(255,255,255,0.92);
-      background: rgba(0,0,0,0.12);
-      border-radius: 20px; padding: 2px 7px;
-      margin-top: 3px; white-space: nowrap;
-      backdrop-filter: blur(2px);
-    }
-
-    /* — Right column: Instructions — */
-    .back-right {
-      flex: 1; display: flex; flex-direction: column;
-      justify-content: center; padding: 7px 8px 7px 2px;
-      position: relative; z-index: 1;
-    }
-    .back-instructions {
-      background: rgba(255,255,255,0.95);
-      border-radius: 10px; padding: 7px 9px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-      border: 1px solid rgba(255,255,255,0.5);
-    }
-    .instr-title {
-      font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 8.5px; font-weight: 700; color: #0058BD;
-      display: flex; align-items: center; gap: 3px;
-      margin-bottom: 5px;
-    }
-    .instr-title .material-symbols-outlined {
-      font-size: 12px; color: #0058BD;
-    }
-    .step-list {
-      list-style: none; margin: 0; padding: 0;
-      display: flex; flex-direction: column; gap: 3px;
-    }
-    .step-item {
-      display: flex; align-items: center; gap: 5px;
-      font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 7px; color: #414754;
-    }
-    .step-num {
-      width: 14px; height: 14px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 6.5px; font-weight: 700; flex-shrink: 0;
-    }
-    .step-num-cyan { background: #5ED8FF; color: #005C72; }
-    .step-num-gold { background: #FFE171; color: #554600; }
-    .step-highlight {
-      font-weight: 700; color: #0058BD;
-    }
-
-    /* — Footer strip — */
-    .back-footer {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      background: rgba(0,0,0,0.1);
-      padding: 2.5px 0; text-align: center; z-index: 3;
-      backdrop-filter: blur(2px);
-    }
-    .back-footer span {
-      font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 5.5px; color: rgba(255,255,255,0.8);
-      text-transform: uppercase; letter-spacing: 1.2px;
-      font-weight: 500;
+      width: 120px; height: 120px; object-fit: contain;
+      filter: drop-shadow(0 6px 16px rgba(0,0,0,0.25));
     }
   </style>
 </head>
@@ -291,6 +219,7 @@
         return;
       }
 
+      // Coin & mascot images from the reference design
       const coinImg = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBZz2ZD2_QZ2w5J26s8JPFuUvEnB33LWeUm5X8Kk8lNb8OvLXSHR1o6b-vSB6kRsgIMX9h2E5ikjaL5l2jf4hnx1vQ_6HL--ugsK0SJS0DHIKXpAQPFbVgtPuOKwwG8AlzPfjlPLoCG2Yebd4Q52OEftfjDtCOJBakce3nyHM7cC6Vp19-GF3kYn3p3qhVv2ZOiWVJzFQa5n8mijlGE0FlNeKuiqiU5yuSxODOiyFEDx_NpC1Nm-OIDuw';
       const mascotImg = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxXWQzib596xfoO6iUIJQxuRLr2x2F0RV2rXl0W1vV8oCHVdhQYE21o8PQdIGfKuia8ELHjsF5vFwIq651kZHoBbsGOx2Q7_dkU_crFLp7LNJczYu1lwNDp8Sy8ZHqTZa6RcSYLxJZ9ha9pDW_Xek3sNWspsWx_AU4cBqTd7VNhzi_QQsUpsH0aRvHRGqdz6rQINAuxzrH34GvRLxEGwOzzru4lzVonfUtgL7X55HU4quCK1PCWytpauooRpq_2fs_z5Q';
 
@@ -298,14 +227,19 @@
 
       qrIds.forEach((id) => {
         const url = `${BASE_URL}/s/${id}`;
-        const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(url)}&color=2B2D42`;
+        const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(url)}&color=FFFFFF&bgcolor=00000000`;
 
         const wrapper = document.createElement('div');
         wrapper.className = 'card-wrapper';
         wrapper.innerHTML = `
           <div>
-            <!-- ========== FRONT CARD ========== -->
+            <!-- ========== FRONT CARD (Blue/Cyan ATM style) ========== -->
             <div class="card-front">
+              <!-- Decorative sparkles -->
+              <span class="front-deco front-star-tl">⭐</span>
+              <span class="front-deco front-star-tr">⭐✨</span>
+              <span class="front-deco front-star-br">✨</span>
+
               <div class="front-qr-zone">
                 <img class="qr-img" src="${qrImgUrl}" alt="QR ${id}">
                 <div class="front-qr-label">Scan Me!</div>
@@ -327,52 +261,17 @@
           </div>
 
           <div>
-            <!-- ========== BACK CARD ========== -->
+            <!-- ========== BACK CARD (Gradient + Large Mascot centered) ========== -->
             <div class="card-back">
-              <!-- Decorative elements -->
+              <!-- Floating decorative elements -->
               <img class="deco deco-coin-tl" src="${coinImg}" alt="">
               <span class="deco deco-star-tr material-symbols-outlined" style='font-variation-settings:"FILL" 1;'>star</span>
               <span class="deco deco-star-bl material-symbols-outlined" style='font-variation-settings:"FILL" 1;'>stars</span>
               <img class="deco deco-coin-br" src="${coinImg}" alt="">
 
-              <!-- Left: Mascot + Tagline -->
-              <div class="back-left">
+              <!-- Large centered mascot -->
+              <div class="back-mascot-container">
                 <img class="back-mascot-img" src="${mascotImg}" alt="Mascot">
-                <div class="back-tagline">Menabung<br>Itu Seru! 🎉</div>
-                <div class="back-subtitle-pill">Kumpulkan ⭐ setiap menabung!</div>
-              </div>
-
-              <!-- Right: Instructions -->
-              <div class="back-right">
-                <div class="back-instructions">
-                  <div class="instr-title">
-                    <span class="material-symbols-outlined" style='font-variation-settings:"FILL" 1;'>info</span>
-                    Cara Pakai
-                  </div>
-                  <ul class="step-list">
-                    <li class="step-item">
-                      <div class="step-num step-num-cyan">1</div>
-                      <span>Scan QR Code pada kartu</span>
-                    </li>
-                    <li class="step-item">
-                      <div class="step-num step-num-cyan">2</div>
-                      <span>Isi data dengan benar</span>
-                    </li>
-                    <li class="step-item">
-                      <div class="step-num step-num-cyan">3</div>
-                      <span>Setor tabungan ke petugas</span>
-                    </li>
-                    <li class="step-item">
-                      <div class="step-num step-num-gold">4</div>
-                      <span class="step-highlight">Dapat bintang! ⭐</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              <!-- Footer -->
-              <div class="back-footer">
-                <span>celdig-kalibening.vercel.app</span>
               </div>
             </div>
             <div class="card-label">▲ BELAKANG</div>
