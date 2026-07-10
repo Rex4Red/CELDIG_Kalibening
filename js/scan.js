@@ -147,10 +147,23 @@
       // Show success overlay
       showSuccess(childData.name, amount, res.newBalance, res.newPoints);
 
-      // Update displayed data
+      // Update displayed data immediately (optimistic)
       childData.balance = res.newBalance;
       childData.points = res.newPoints;
       childData.depositCount = (childData.depositCount || 0) + 1;
+
+      // Add new deposit to history instantly
+      if (!childData.history) childData.history = [];
+      childData.history.unshift({
+        amount: amount,
+        created_at: new Date().toISOString()
+      });
+
+      // Update balance & points display right away
+      document.getElementById('childBalance').textContent = CONFIG.formatRupiah(res.newBalance);
+      document.getElementById('childPoints').textContent = `⭐ ${res.newPoints} poin`;
+      document.getElementById('childDeposits').textContent = `${childData.depositCount} kali nabung`;
+      renderHistory(childData.history);
     } catch (err) {
       alert('Gagal menyimpan: ' + err.message);
     } finally {
@@ -171,10 +184,17 @@
     spawnConfetti();
   }
 
-  document.getElementById('successClose').addEventListener('click', () => {
+  document.getElementById('successClose').addEventListener('click', async () => {
     $overlay.classList.remove('active');
-    // Refresh deposit view with new data
-    showDepositView(childData);
+    // Re-fetch fresh data from server to ensure full sync
+    try {
+      const fresh = await API.getChild(qrId);
+      childData = fresh;
+      showDepositView(fresh);
+    } catch(e) {
+      // Fallback to local data if fetch fails
+      showDepositView(childData);
+    }
   });
 
   // --- Confetti ---
