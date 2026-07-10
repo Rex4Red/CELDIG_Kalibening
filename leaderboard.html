@@ -7,106 +7,160 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="lb-page">
-  <style>
-    /* ===== Epic Meteor Shower ===== */
-    .meteors-container {
-      position: fixed; inset: 0;
-      pointer-events: none; z-index: 0;
-      overflow: hidden;
-    }
-    .meteor {
-      position: absolute;
-      border-radius: 50%;
-      opacity: 0;
-      animation: meteorFly linear forwards;
-    }
-    /* Glowing head */
-    .meteor .head {
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      background: var(--m-color, #fff);
-      box-shadow:
-        0 0 8px 3px var(--m-color, #fff),
-        0 0 20px 6px var(--m-glow, rgba(255,255,255,0.4));
-    }
-    /* Long gradient tail */
-    .meteor .tail {
-      position: absolute;
-      top: 50%; right: 100%;
-      transform: translateY(-50%);
-      height: var(--tail-h, 2px);
-      width: var(--tail-w, 120px);
-      background: linear-gradient(90deg, transparent, var(--m-glow, rgba(255,255,255,0.3)) 30%, var(--m-color, #fff));
-      border-radius: 999px;
-      filter: blur(0.5px);
-    }
-
-    @keyframes meteorFly {
-      0%   { opacity: 0; transform: translate(0, 0) rotate(var(--angle, -35deg)); }
-      8%   { opacity: 1; }
-      75%  { opacity: 0.8; }
-      100% { opacity: 0; transform: translate(var(--dx, -900px), var(--dy, 700px)) rotate(var(--angle, -35deg)); }
-    }
-  </style>
-
-  <!-- Sparkles background -->
-  <div id="sparkles" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
-
-  <!-- Meteor shower container -->
-  <div class="meteors-container" id="meteorContainer"></div>
+  <!-- Canvas meteor shower -->
+  <canvas id="meteorCanvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></canvas>
 
   <script>
-  (function(){
-    const container = document.getElementById('meteorContainer');
-    const colors = [
-      { color: '#FFD700', glow: 'rgba(255,215,0,0.5)' },     // gold
-      { color: '#4CC9F0', glow: 'rgba(76,201,240,0.5)' },     // cyan
-      { color: '#fff',    glow: 'rgba(255,255,255,0.4)' },     // white
-      { color: '#F72585', glow: 'rgba(247,37,133,0.4)' },     // pink
-      { color: '#7B2FF7', glow: 'rgba(123,47,247,0.4)' },     // purple
+  (function() {
+    const canvas = document.getElementById('meteorCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // ── Color palette ──
+    const palette = [
+      { r:255, g:215, b:0 },    // gold
+      { r:76,  g:201, b:240 },   // cyan
+      { r:255, g:255, b:255 },   // white
+      { r:247, g:37,  b:133 },   // pink
+      { r:160, g:120, b:255 },   // lavender
     ];
 
+    // ── Twinkling Stars ──
+    const stars = [];
+    for (let i = 0; i < 80; i++) {
+      stars.push({
+        x: Math.random() * 2000,
+        y: Math.random() * 1200,
+        r: 0.4 + Math.random() * 1.2,
+        alpha: Math.random(),
+        speed: 0.003 + Math.random() * 0.015,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+
+    function drawStars(t) {
+      for (const s of stars) {
+        const a = 0.3 + 0.7 * Math.abs(Math.sin(t * s.speed + s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x % W, s.y % H, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${a})`;
+        ctx.fill();
+      }
+    }
+
+    // ── Meteor class ──
+    class Meteor {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        const c = palette[Math.floor(Math.random() * palette.length)];
+        this.cr = c.r; this.cg = c.g; this.cb = c.b;
+        this.x = W * (0.3 + Math.random() * 0.7);
+        this.y = -10 - Math.random() * H * 0.2;
+        const angle = (210 + Math.random() * 30) * Math.PI / 180; // 210-240 deg
+        const speed = 6 + Math.random() * 10;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = -Math.sin(angle) * speed;
+        this.size = 2 + Math.random() * 3;
+        this.tailLen = 20 + Math.random() * 35;
+        this.trail = [];
+        this.life = 1;
+        this.decay = 0.004 + Math.random() * 0.006;
+        this.active = true;
+      }
+      update() {
+        this.trail.push({ x: this.x, y: this.y, life: 1 });
+        if (this.trail.length > this.tailLen) this.trail.shift();
+        for (const p of this.trail) p.life -= 0.03;
+        this.trail = this.trail.filter(p => p.life > 0);
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+        if (this.life <= 0 || this.x < -100 || this.y > H + 100) {
+          this.active = false;
+        }
+      }
+      draw() {
+        // Draw trail
+        for (let i = 0; i < this.trail.length; i++) {
+          const p = this.trail[i];
+          const progress = i / this.trail.length;
+          const alpha = p.life * progress * this.life * 0.6;
+          const sz = this.size * progress * 0.8;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, Math.max(0.3, sz), 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${this.cr},${this.cg},${this.cb},${alpha})`;
+          ctx.fill();
+        }
+        // Draw glowing head
+        const a = Math.min(1, this.life);
+        // outer glow
+        const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 6);
+        grad.addColorStop(0, `rgba(${this.cr},${this.cg},${this.cb},${a * 0.5})`);
+        grad.addColorStop(0.4, `rgba(${this.cr},${this.cg},${this.cb},${a * 0.15})`);
+        grad.addColorStop(1, `rgba(${this.cr},${this.cg},${this.cb},0)`);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size * 6, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+        // bright core
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${a})`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size * 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.cr},${this.cg},${this.cb},${a * 0.7})`;
+        ctx.fill();
+      }
+    }
+
+    // ── Meteor pool ──
+    const meteors = [];
+    let spawnTimer = 0;
+
     function spawnMeteor() {
-      const el = document.createElement('div');
-      el.className = 'meteor';
-      const c = colors[Math.floor(Math.random() * colors.length)];
-      const size = 3 + Math.random() * 4;           // 3-7px head
-      const tailW = 80 + Math.random() * 160;       // 80-240px tail
-      const tailH = 1.5 + Math.random() * 1.5;      // 1.5-3px tail thickness
-      const dur = 1 + Math.random() * 2;            // 1-3s flight
-      const angle = -25 - Math.random() * 25;       // -25 to -50 deg
-      const startX = 20 + Math.random() * 80;       // 20-100% from left
-      const startY = -5 + Math.random() * 30;       // -5% to 25% from top
-      const dx = -(500 + Math.random() * 600);
-      const dy = 400 + Math.random() * 500;
-
-      el.style.cssText = `
-        left:${startX}%; top:${startY}%;
-        width:${size}px; height:${size}px;
-        --m-color:${c.color}; --m-glow:${c.glow};
-        --tail-w:${tailW}px; --tail-h:${tailH}px;
-        --angle:${angle}deg; --dx:${dx}px; --dy:${dy}px;
-        animation-duration:${dur}s;
-      `;
-      el.innerHTML = '<div class="head"></div><div class="tail"></div>';
-      container.appendChild(el);
-
-      // Clean up after animation ends
-      el.addEventListener('animationend', () => el.remove());
+      const m = new Meteor();
+      meteors.push(m);
     }
 
-    // Spawn meteors at random intervals
-    function scheduleNext() {
-      const delay = 400 + Math.random() * 1800; // 0.4-2.2s between meteors
-      setTimeout(() => {
+    // ── Animation loop ──
+    let t = 0;
+    function animate() {
+      t++;
+      ctx.clearRect(0, 0, W, H);
+
+      // Draw twinkling stars
+      drawStars(t);
+
+      // Spawn logic: random interval
+      spawnTimer--;
+      if (spawnTimer <= 0) {
         spawnMeteor();
-        scheduleNext();
-      }, delay);
+        spawnTimer = 30 + Math.floor(Math.random() * 90); // every 0.5-2s at 60fps
+      }
+
+      // Update & draw meteors
+      for (let i = meteors.length - 1; i >= 0; i--) {
+        meteors[i].update();
+        meteors[i].draw();
+        if (!meteors[i].active) meteors.splice(i, 1);
+      }
+
+      requestAnimationFrame(animate);
     }
 
-    // Start with a burst of 3
-    for (let i = 0; i < 3; i++) setTimeout(spawnMeteor, i * 300);
-    scheduleNext();
+    // Start with initial burst
+    for (let i = 0; i < 3; i++) spawnMeteor();
+    animate();
   })();
   </script>
 
