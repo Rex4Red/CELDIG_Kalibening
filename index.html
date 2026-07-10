@@ -6,9 +6,114 @@
   <title>CELDIG — Celengan Digital</title>
   <meta name="description" content="Sistem Tabungan Anak Berbasis QR Code">
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { overflow: hidden; }
+
+    /* Subtle animated gradient background */
+    .landing-bg {
+      position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 30%, #fff5f0 60%, #f0f4ff 100%);
+      background-size: 300% 300%;
+      animation: bgShift 12s ease-in-out infinite;
+    }
+    @keyframes bgShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Soft floating shapes */
+    .deco-shape {
+      position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+      opacity: 0.08; filter: blur(2px);
+    }
+    .shape-1 {
+      width: 300px; height: 300px;
+      background: var(--primary);
+      top: -80px; right: -60px;
+      animation: float1 8s ease-in-out infinite;
+    }
+    .shape-2 {
+      width: 200px; height: 200px;
+      background: var(--secondary);
+      bottom: -40px; left: -40px;
+      animation: float2 10s ease-in-out infinite;
+    }
+    .shape-3 {
+      width: 150px; height: 150px;
+      background: #FFD60A;
+      top: 40%; left: -30px;
+      animation: float3 9s ease-in-out infinite;
+    }
+    .shape-4 {
+      width: 180px; height: 180px;
+      background: var(--primary-dark);
+      bottom: 10%; right: -40px;
+      animation: float1 11s ease-in-out infinite reverse;
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-20px, 25px) scale(1.05); }
+    }
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(25px, -20px) scale(1.08); }
+    }
+    @keyframes float3 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(15px, -30px); }
+    }
+
+    /* Subtle dot pattern overlay */
+    .dot-overlay {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* Floating emoji decorations */
+    .deco-emoji {
+      position: fixed; pointer-events: none; z-index: 0;
+      font-size: 28px; opacity: 0.12;
+    }
+    .emoji-1 { top: 12%; left: 8%; animation: emFloat 7s ease-in-out infinite; }
+    .emoji-2 { top: 20%; right: 10%; animation: emFloat 9s ease-in-out 1s infinite; }
+    .emoji-3 { bottom: 18%; left: 12%; animation: emFloat 8s ease-in-out 2s infinite; }
+    .emoji-4 { bottom: 25%; right: 8%; animation: emFloat 10s ease-in-out 0.5s infinite; }
+    .emoji-5 { top: 50%; right: 5%; animation: emFloat 7.5s ease-in-out 3s infinite; font-size: 22px; }
+
+    @keyframes emFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(10deg); }
+    }
+
+    /* Main content above decorations */
+    .landing-content {
+      position: relative; z-index: 1;
+    }
+  </style>
 </head>
 <body>
-  <div class="flex-center flex-col" style="min-height:100dvh; padding:24px; text-align:center;">
+  <!-- Animated gradient background -->
+  <div class="landing-bg"></div>
+
+  <!-- Dot pattern -->
+  <div class="dot-overlay"></div>
+
+  <!-- Soft floating blobs -->
+  <div class="deco-shape shape-1"></div>
+  <div class="deco-shape shape-2"></div>
+  <div class="deco-shape shape-3"></div>
+  <div class="deco-shape shape-4"></div>
+
+  <!-- Floating emoji accents -->
+  <span class="deco-emoji emoji-1">⭐</span>
+  <span class="deco-emoji emoji-2">💰</span>
+  <span class="deco-emoji emoji-3">🪙</span>
+  <span class="deco-emoji emoji-4">✨</span>
+  <span class="deco-emoji emoji-5">🐱</span>
+
+  <div class="landing-content flex-center flex-col" style="min-height:100dvh; padding:24px; text-align:center;">
     <!-- Hero -->
     <div class="animate-bounce-in" style="font-size:80px; margin-bottom:16px;">🐱</div>
     <h1 class="h1" style="font-size:36px; margin-bottom:4px;">
