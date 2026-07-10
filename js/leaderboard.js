@@ -1,5 +1,5 @@
 /**
- * CELDIG — Leaderboard Logic (Projector Mode)
+ * CELDIG — Leaderboard Logic (with localStorage cache for speed)
  */
 (function () {
   const AVATARS = ['🐱','🐶','🐰','🐻','🦊','🐼','🐨','🐯','🦁','🐸','🐵','🐧'];
@@ -8,11 +8,34 @@
     monthly: 'Bintang Terbanyak Bulan Ini! 🌟',
     all: 'Bintang Terbanyak Sepanjang Masa! 🏅'
   };
+  const CACHE_KEY = 'celdig_lb_cache';
+  const CACHE_TTL = 30000; // 30s cache freshness
   let currentPeriod = 'weekly';
+
+  // --- Cache helpers ---
+  function getCached(period) {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const cache = JSON.parse(raw);
+      if (cache[period]) return cache[period].data;
+    } catch(e) {}
+    return null;
+  }
+
+  function setCache(period, data) {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      const cache = raw ? JSON.parse(raw) : {};
+      cache[period] = { data, ts: Date.now() };
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+    } catch(e) {}
+  }
 
   // --- Sparkle background ---
   function createSparkles() {
     const container = document.getElementById('sparkles');
+    if (!container) return;
     for (let i = 0; i < 50; i++) {
       const s = document.createElement('div');
       s.className = 'sparkle';
@@ -36,14 +59,29 @@
     });
   });
 
-  // --- Load Leaderboard ---
+  // --- Load Leaderboard (cache-first strategy) ---
   async function loadLeaderboard() {
     const podium = document.getElementById('podium');
     const grid = document.getElementById('rankGrid');
 
+    // 1) Show cached data INSTANTLY if available
+    const cached = getCached(currentPeriod);
+    if (cached && cached.length) {
+      renderPodium(cached.slice(0, 3));
+      renderRankList(cached.slice(3, 10));
+    } else if (!cached) {
+      // Only show loading spinner on very first load (no cache at all)
+      podium.innerHTML = '<div class="loading-state"><div class="spinner"></div><p style="color:rgba(255,255,255,0.6)">Memuat ranking...</p></div>';
+      grid.innerHTML = '';
+    }
+
+    // 2) Fetch fresh data in background
     try {
       const res = await API.getLeaderboard(currentPeriod);
       const data = res.leaderboard || [];
+
+      // Save to cache
+      setCache(currentPeriod, data);
 
       if (!data.length) {
         podium.innerHTML = '<p style="color:rgba(255,255,255,0.5);padding:40px;">Belum ada data</p>';
@@ -54,7 +92,10 @@
       renderPodium(data.slice(0, 3));
       renderRankList(data.slice(3, 10));
     } catch (err) {
-      podium.innerHTML = '<p style="color:rgba(255,255,255,0.5);padding:40px;">Gagal memuat data 😿</p>';
+      // If we already showed cached data, don't show error
+      if (!cached) {
+        podium.innerHTML = '<p style="color:rgba(255,255,255,0.5);padding:40px;">Gagal memuat data 😿</p>';
+      }
     }
   }
 
