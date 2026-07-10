@@ -27,27 +27,27 @@
       <button class="topbar-action" id="logoutBtn" title="Logout">🚪</button>
     </header>
 
-    <main class="container flex-col gap-md pb-nav" style="padding-top:20px;">
+    <main class="container flex-col pb-nav" style="padding-top:24px; gap:20px;">
       <!-- Stats -->
-      <div class="stat-card animate-slide-up">
+      <div class="stat-card animate-slide-up" style="padding:24px;">
         <p class="label" style="opacity:0.8;">💰 Total Tabungan</p>
-        <p class="nominal" id="statTotal">Rp 0</p>
+        <p class="nominal" id="statTotal" style="margin-top:4px;">Rp 0</p>
       </div>
-      <div class="stat-row animate-slide-up delay-1">
-        <div class="stat-box">
+      <div class="stat-row animate-slide-up delay-1" style="gap:14px;">
+        <div class="stat-box" style="padding:18px;">
           <p class="label">Total Siswa</p>
-          <p class="h2" id="statStudents">0</p>
+          <p class="h2" id="statStudents" style="margin-top:6px;">0</p>
         </div>
-        <div class="stat-box">
+        <div class="stat-box" style="padding:18px;">
           <p class="label">Total Setoran</p>
-          <p class="h2" id="statDeposits">0</p>
+          <p class="h2" id="statDeposits" style="margin-top:6px;">0</p>
         </div>
       </div>
 
       <!-- Generate QR -->
-      <div class="card card-accent animate-slide-up delay-2">
-        <h3 class="h3" style="margin-bottom:12px;">🎫 Generate QR Code</h3>
-        <p class="caption text-secondary" style="margin-bottom:12px;">Buat QR baru untuk siswa yang belum punya</p>
+      <div class="card card-accent animate-slide-up delay-2" style="padding:24px;">
+        <h3 class="h3" style="margin-bottom:8px;">🎫 Generate QR Code</h3>
+        <p class="caption text-secondary" style="margin-bottom:16px;">Buat QR baru untuk siswa yang belum punya</p>
         <div class="flex gap-xs">
           <input class="form-input" id="qrQuantity" type="number" min="1" max="50" value="10" style="max-width:100px;">
           <button class="btn btn-primary flex-1" id="generateBtn">🖨️ Cetak QR</button>
@@ -55,18 +55,18 @@
       </div>
 
       <!-- Quick Actions -->
-      <div class="flex gap-xs animate-slide-up delay-3">
+      <div class="flex animate-slide-up delay-3" style="gap:12px;">
         <a href="/leaderboard" class="btn btn-primary flex-1" style="font-size:13px;">🏆 Leaderboard</a>
         <button class="btn btn-secondary flex-1" id="openSheetBtn" style="font-size:13px;">📊 Spreadsheet</button>
       </div>
 
       <!-- Student Roster -->
-      <div class="animate-slide-up delay-4">
-        <div class="flex-between mb-sm">
+      <div class="animate-slide-up delay-4" style="margin-top:4px;">
+        <div class="flex-between" style="margin-bottom:14px;">
           <h3 class="h3">📋 Daftar Siswa</h3>
           <span class="caption text-secondary" id="studentCount">0 siswa</span>
         </div>
-        <div id="studentList" class="flex-col gap-xs">
+        <div id="studentList" class="flex-col" style="gap:10px;">
           <div class="loading-state"><div class="spinner"></div></div>
         </div>
       </div>
