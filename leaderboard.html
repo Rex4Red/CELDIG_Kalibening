@@ -8,7 +8,7 @@
 </head>
 <body class="lb-page">
   <style>
-    /* ===== Shooting Stars / Meteor Animation ===== */
+    /* ===== Epic Meteor Shower ===== */
     .meteors-container {
       position: fixed; inset: 0;
       pointer-events: none; z-index: 0;
@@ -16,94 +16,99 @@
     }
     .meteor {
       position: absolute;
-      width: 2px; height: 2px;
-      background: #fff;
       border-radius: 50%;
-      box-shadow: 0 0 6px 2px rgba(255,255,255,0.6);
       opacity: 0;
-      transform: rotate(-45deg);
+      animation: meteorFly linear forwards;
     }
-    .meteor::before {
-      content: '';
+    /* Glowing head */
+    .meteor .head {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: var(--m-color, #fff);
+      box-shadow:
+        0 0 8px 3px var(--m-color, #fff),
+        0 0 20px 6px var(--m-glow, rgba(255,255,255,0.4));
+    }
+    /* Long gradient tail */
+    .meteor .tail {
       position: absolute;
-      top: 0; left: 0;
-      width: 60px; height: 1.5px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
-      transform: translateX(-100%);
+      top: 50%; right: 100%;
+      transform: translateY(-50%);
+      height: var(--tail-h, 2px);
+      width: var(--tail-w, 120px);
+      background: linear-gradient(90deg, transparent, var(--m-glow, rgba(255,255,255,0.3)) 30%, var(--m-color, #fff));
       border-radius: 999px;
+      filter: blur(0.5px);
     }
 
-    @keyframes shootingStar {
-      0%   { opacity: 0; transform: translate(0, 0) rotate(-45deg); }
-      5%   { opacity: 1; }
-      70%  { opacity: 1; }
-      100% { opacity: 0; transform: translate(-600px, 600px) rotate(-45deg); }
+    @keyframes meteorFly {
+      0%   { opacity: 0; transform: translate(0, 0) rotate(var(--angle, -35deg)); }
+      8%   { opacity: 1; }
+      75%  { opacity: 0.8; }
+      100% { opacity: 0; transform: translate(var(--dx, -900px), var(--dy, 700px)) rotate(var(--angle, -35deg)); }
     }
-
-    /* --- Individual meteor instances --- */
-    .meteor:nth-child(1) {
-      top: 5%; left: 70%;
-      animation: shootingStar 2.2s ease-in 1s infinite;
-    }
-    .meteor:nth-child(1)::before { width: 80px; }
-
-    .meteor:nth-child(2) {
-      top: 12%; left: 90%;
-      animation: shootingStar 2.8s ease-in 4.5s infinite;
-    }
-    .meteor:nth-child(2)::before { width: 50px; }
-
-    .meteor:nth-child(3) {
-      top: 2%; left: 50%;
-      animation: shootingStar 1.8s ease-in 7s infinite;
-    }
-    .meteor:nth-child(3)::before { width: 100px; height: 2px; }
-
-    .meteor:nth-child(4) {
-      top: 18%; left: 80%;
-      animation: shootingStar 3s ease-in 3s infinite;
-    }
-    .meteor:nth-child(4)::before { width: 40px; }
-
-    .meteor:nth-child(5) {
-      top: 8%; left: 40%;
-      animation: shootingStar 2.5s ease-in 9s infinite;
-    }
-    .meteor:nth-child(5)::before { width: 70px; }
-
-    .meteor:nth-child(6) {
-      top: 25%; left: 95%;
-      animation: shootingStar 2s ease-in 6s infinite;
-    }
-    .meteor:nth-child(6)::before { width: 90px; height: 2px; }
-
-    .meteor:nth-child(7) {
-      top: 0%; left: 60%;
-      animation: shootingStar 3.2s ease-in 11s infinite;
-    }
-    .meteor:nth-child(7)::before { width: 55px; }
-
-    .meteor:nth-child(8) {
-      top: 15%; left: 30%;
-      animation: shootingStar 2.4s ease-in 14s infinite;
-    }
-    .meteor:nth-child(8)::before { width: 65px; }
   </style>
 
   <!-- Sparkles background -->
   <div id="sparkles" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
 
-  <!-- Shooting stars / Meteors -->
-  <div class="meteors-container">
-    <div class="meteor"></div>
-    <div class="meteor"></div>
-    <div class="meteor"></div>
-    <div class="meteor"></div>
-    <div class="meteor"></div>
-    <div class="meteor"></div>
-    <div class="meteor"></div>
-    <div class="meteor"></div>
-  </div>
+  <!-- Meteor shower container -->
+  <div class="meteors-container" id="meteorContainer"></div>
+
+  <script>
+  (function(){
+    const container = document.getElementById('meteorContainer');
+    const colors = [
+      { color: '#FFD700', glow: 'rgba(255,215,0,0.5)' },     // gold
+      { color: '#4CC9F0', glow: 'rgba(76,201,240,0.5)' },     // cyan
+      { color: '#fff',    glow: 'rgba(255,255,255,0.4)' },     // white
+      { color: '#F72585', glow: 'rgba(247,37,133,0.4)' },     // pink
+      { color: '#7B2FF7', glow: 'rgba(123,47,247,0.4)' },     // purple
+    ];
+
+    function spawnMeteor() {
+      const el = document.createElement('div');
+      el.className = 'meteor';
+      const c = colors[Math.floor(Math.random() * colors.length)];
+      const size = 3 + Math.random() * 4;           // 3-7px head
+      const tailW = 80 + Math.random() * 160;       // 80-240px tail
+      const tailH = 1.5 + Math.random() * 1.5;      // 1.5-3px tail thickness
+      const dur = 1 + Math.random() * 2;            // 1-3s flight
+      const angle = -25 - Math.random() * 25;       // -25 to -50 deg
+      const startX = 20 + Math.random() * 80;       // 20-100% from left
+      const startY = -5 + Math.random() * 30;       // -5% to 25% from top
+      const dx = -(500 + Math.random() * 600);
+      const dy = 400 + Math.random() * 500;
+
+      el.style.cssText = `
+        left:${startX}%; top:${startY}%;
+        width:${size}px; height:${size}px;
+        --m-color:${c.color}; --m-glow:${c.glow};
+        --tail-w:${tailW}px; --tail-h:${tailH}px;
+        --angle:${angle}deg; --dx:${dx}px; --dy:${dy}px;
+        animation-duration:${dur}s;
+      `;
+      el.innerHTML = '<div class="head"></div><div class="tail"></div>';
+      container.appendChild(el);
+
+      // Clean up after animation ends
+      el.addEventListener('animationend', () => el.remove());
+    }
+
+    // Spawn meteors at random intervals
+    function scheduleNext() {
+      const delay = 400 + Math.random() * 1800; // 0.4-2.2s between meteors
+      setTimeout(() => {
+        spawnMeteor();
+        scheduleNext();
+      }, delay);
+    }
+
+    // Start with a burst of 3
+    for (let i = 0; i < 3; i++) setTimeout(spawnMeteor, i * 300);
+    scheduleNext();
+  })();
+  </script>
 
   <div style="position:relative; z-index:1;">
     <!-- Header -->
