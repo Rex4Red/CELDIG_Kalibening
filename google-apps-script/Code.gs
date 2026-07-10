@@ -101,6 +101,7 @@ function handleRequest(e) {
       case 'getChild':      result = getChild(params.qrId); break;
       case 'register':      result = registerChild(params.qrId, params.name, params.className); break;
       case 'deposit':       result = recordDeposit(params.qrId, params.amount, params.operator); break;
+      case 'withdraw':      result = recordWithdraw(params.qrId, params.amount, params.operator); break;
       case 'getStats':      result = getStats(); break;
       case 'getStudents':   result = getStudents(); break;
       case 'getLeaderboard':result = getLeaderboard(params.period); break;
@@ -219,6 +220,52 @@ function recordDeposit(qrId, amount, operator) {
   return {
     success: true,
     depositId: depositId,
+    newBalance: newBalance,
+    newPoints: newPoints
+  };
+}
+
+/**
+ * Catat penarikan tabungan (withdrawal)
+ */
+function recordWithdraw(qrId, amount, operator) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const dep = ss.getSheetByName('Deposits');
+  const reg = ss.getSheetByName('Registry');
+  
+  // Get child name
+  const regData = reg.getDataRange().getValues();
+  let childName = '';
+  for (let i = 1; i < regData.length; i++) {
+    if (regData[i][0] === qrId) {
+      childName = regData[i][1];
+      break;
+    }
+  }
+  
+  if (!childName) return { error: 'Siswa belum terdaftar' };
+  
+  // Check current balance
+  const allDeposits = getDepositsForChild(qrId);
+  const currentBalance = allDeposits.reduce((sum, d) => sum + d.amount, 0);
+  const withdrawAmount = Number(amount);
+  
+  if (withdrawAmount > currentBalance) {
+    return { error: 'Saldo tidak mencukupi. Saldo saat ini: Rp ' + currentBalance.toLocaleString('id-ID') };
+  }
+  
+  const withdrawId = 'WDR-' + Date.now();
+  const now = new Date().toISOString();
+  
+  // Record as NEGATIVE amount, 0 points
+  dep.appendRow([withdrawId, qrId, childName, -withdrawAmount, 0, operator || 'Guru', now]);
+  
+  const newBalance = currentBalance - withdrawAmount;
+  const newPoints = allDeposits.filter(d => d.amount > 0).length; // only count deposits
+  
+  return {
+    success: true,
+    withdrawId: withdrawId,
     newBalance: newBalance,
     newPoints: newPoints
   };

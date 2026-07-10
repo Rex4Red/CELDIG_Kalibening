@@ -115,8 +115,28 @@
         </form>
       </div>
 
+      <!-- Withdraw Form -->
+      <div class="card animate-slide-up delay-2" style="border-left:3px solid #F72585;">
+        <div class="flex-between mb-sm">
+          <h3 class="h3">Ambil Tabungan</h3>
+          <span style="font-size:24px;">💸</span>
+        </div>
+        <form id="withdrawForm" class="flex-col gap-sm">
+          <input class="form-input form-input-big" id="withdrawAmount" type="number" inputmode="numeric" min="500" placeholder="0" required>
+          <div>
+            <p class="label text-secondary mb-sm" style="margin-bottom:8px;">Pilihan Cepat:</p>
+            <div class="chip-group" id="quickWithdrawAmounts"></div>
+          </div>
+          <div class="notice" style="background:rgba(247,37,133,0.08); border-color:rgba(247,37,133,0.3);">
+            <span>⚠️</span>
+            <span>Pastikan nominal penarikan sesuai permintaan siswa/wali.</span>
+          </div>
+          <button type="submit" class="btn btn-block mt-sm" style="background:#F72585; color:#fff;">💸 Ambil Tabungan</button>
+        </form>
+      </div>
+
       <!-- History -->
-      <div class="animate-slide-up delay-2">
+      <div class="animate-slide-up delay-3">
         <div class="flex-between mb-sm">
           <h3 class="h3">Riwayat Terakhir</h3>
         </div>
@@ -127,7 +147,7 @@
     </div>
   </main>
 
-  <!-- Success Overlay -->
+  <!-- Deposit Success Overlay -->
   <div id="successOverlay" class="overlay">
     <div class="check-icon animate-bounce-in">✅</div>
     <h2 class="h1">Berhasil! 🎉</h2>
@@ -140,6 +160,21 @@
     </div>
     <button class="btn btn-block" id="successClose" style="background:rgba(255,255,255,0.2); color:#fff; margin-top:16px; max-width:320px;">
       Scan Berikutnya →
+    </button>
+  </div>
+
+  <!-- Withdraw Success Overlay -->
+  <div id="withdrawOverlay" class="overlay" style="background:linear-gradient(135deg, #F72585, #B5179E);">
+    <div class="check-icon animate-bounce-in">💸</div>
+    <h2 class="h1">Penarikan Berhasil</h2>
+    <p class="body" style="opacity:0.9; margin-top:8px;">Tabungan berhasil diambil</p>
+    <div class="detail-card">
+      <p class="label" id="withdrawName">Budi Santoso</p>
+      <p class="nominal" id="withdrawSuccessAmount" style="margin:8px 0; color:#F72585;">-Rp 5.000</p>
+      <p class="body" id="withdrawBalance">Sisa saldo: Rp 25.000</p>
+    </div>
+    <button class="btn btn-block" id="withdrawClose" style="background:rgba(255,255,255,0.2); color:#fff; margin-top:16px; max-width:320px;">
+      Kembali →
     </button>
   </div>
 

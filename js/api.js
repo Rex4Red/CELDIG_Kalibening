@@ -64,6 +64,11 @@ const API = {
     return this.request('getLeaderboard', { period });
   },
 
+  /** Tarik tabungan (withdrawal) */
+  async withdraw(qrId, amount, operator) {
+    return this.request('withdraw', { qrId, amount: Number(amount), operator }, 'POST');
+  },
+
   /** Generate QR IDs baru */
   async generateQRs(count) {
     return this.request('generateQRs', { count: Number(count) }, 'POST');
