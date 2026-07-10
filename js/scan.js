@@ -114,9 +114,9 @@
       return;
     }
 
-    container.innerHTML = history.slice(0, 8).map(h => {
+    container.innerHTML = history.slice(0, 15).map(h => {
       const date = new Date(h.created_at);
-      const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+      const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
       const timeStr = date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
       const isWithdraw = h.amount < 0;
       const absAmount = Math.abs(h.amount);

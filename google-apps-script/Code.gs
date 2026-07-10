@@ -144,7 +144,7 @@ function getChild(qrId) {
       // Get balance & points
       const deposits = getDepositsForChild(qrId);
       const balance = deposits.reduce((sum, d) => sum + d.amount, 0);
-      const points = deposits.length; // frequency-based: 1 deposit = 1 point
+      const points = deposits.filter(d => d.amount > 0).length; // only count deposits, not withdrawals
       
       return {
         registered: true,
@@ -153,8 +153,8 @@ function getChild(qrId) {
         className: data[i][2],
         balance: balance,
         points: points,
-        depositCount: deposits.length,
-        history: deposits.slice(-5).reverse()
+        depositCount: deposits.filter(d => d.amount > 0).length,
+        history: deposits.slice(-15).reverse()
       };
     }
   }
